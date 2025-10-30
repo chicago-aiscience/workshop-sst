@@ -33,14 +33,20 @@ pre-commit run --all-files  # run pre-commit on all files
 ```
 
 ## Get Started
+
 Run the full ETL workflow end-to-end and inspect outputs:
 
 ```bash
-sst run \
+sst \
   --sst data/sst_sample.csv \
   --enso data/nino34_sample.csv \
   --out-dir artifacts \
   --start 2000-01
+```
+
+Run tests:
+
+```bash
 pytest -q
 ```
 

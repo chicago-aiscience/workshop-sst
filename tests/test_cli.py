@@ -29,7 +29,6 @@ def test_cli_runs(tmp_path: pathlib.Path) -> None:
         sys.executable,
         "-m",
         "sst.cli",
-        "run",
         "--sst",
         str(data_dir / "sst_sample.csv"),
         "--enso",
