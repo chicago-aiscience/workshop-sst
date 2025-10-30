@@ -1,42 +1,46 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
+
+requires = [ "setuptools>=68", "wheel" ]
 
 [project]
 name = "sst"
 version = "0.1.0"
 description = "A tiny sea surface temperature ETL sample repo for workshops (SST + ENSO)."
 readme = "README.md"
+license = { text = "MIT" }
+authors = [ { name = "Nikki Tebaldi" } ]
 requires-python = ">=3.10"
-license = {text = "MIT"}
-authors = [{name = "Workshop Maintainers"}]
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
 dependencies = [
-  "pandas>=2.1",
-  "numpy>=1.26",
   "matplotlib>=3.8",
+  "numpy>=1.26",
+  "pandas>=2.1",
   "typer>=0.9",
 ]
 
-[project.optional-dependencies]
-dev = [
-  "pytest>=7.4",
+optional-dependencies.dev = [
+  "black>=24.3",
   "mypy>=1.5",
+  "pre-commit>=3.7",
+  "pyproject-fmt>=1.8",
+  "pytest>=7.4",
   "ruff>=0.4.10",
-  "black>=24.3.0",
-  "pre-commit>=3.7.0",
-  "pyproject-fmt>=1.8.0",
 ]
-
-[project.scripts]
-sst = "sst.cli:app"
+scripts.sst = "sst.cli:app"
 
 [tool.black]
 line-length = 100
 
 [tool.ruff]
 line-length = 100
-select = ["E", "F", "I", "UP"]
-ignore = ["E501"]
+select = [ "E", "F", "I", "UP" ]
+ignore = [ "E501" ]
 
 [tool.mypy]
 python_version = "3.10"

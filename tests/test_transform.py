@@ -1,10 +1,10 @@
 """NumPy-style tests for SST transforms."""
 
 import pandas as pd
-
 from sst.transform import join_on_month, metrics, tidy
 
-def test_tidy_adds_roll12():
+
+def test_tidy_adds_roll12() -> None:
     """Check that `tidy` adds a rolling column while preserving row count.
 
     Notes
@@ -20,7 +20,7 @@ def test_tidy_adds_roll12():
     assert len(out) == 2
 
 
-def test_join_and_metrics_shape():
+def test_join_and_metrics_shape() -> None:
     """Ensure joined data produces metric summary with expected fields.
 
     Notes

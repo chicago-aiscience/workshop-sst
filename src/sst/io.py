@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 
+
 def load_sst(path: Path) -> pd.DataFrame:
     """Load sea surface temperature observations from disk.
 
@@ -19,6 +20,7 @@ def load_sst(path: Path) -> pd.DataFrame:
         Parsed SST table with original column names and dtypes.
     """
     return pd.read_csv(path)
+
 
 def load_enso(path: Path) -> pd.DataFrame:
     """Load ENSO index observations from disk.

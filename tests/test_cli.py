@@ -5,7 +5,7 @@ import subprocess
 import sys
 
 
-def test_cli_runs(tmp_path):
+def test_cli_runs(tmp_path: pathlib.Path) -> None:
     """Run the CLI module via `python -m` and ensure artifacts are produced.
 
     Parameters

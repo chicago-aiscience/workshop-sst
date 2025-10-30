@@ -4,17 +4,20 @@ from pathlib import Path
 
 import typer
 
-from .io import load_sst, load_enso
+from .io import load_enso, load_sst
 from .plot import make_trend_plot
 from .transform import join_on_month, metrics, tidy
 
 app = typer.Typer(help="SST CLI")
 
+
 @app.command("run")
-def run(sst: Path = Path("data/sst_sample.csv"),
-        enso: Path = Path("data/nino34_sample.csv"),
-        out_dir: Path = Path("artifacts"),
-        start: str = "2000-01"):
+def run(
+    sst: Path = Path("data/sst_sample.csv"),
+    enso: Path = Path("data/nino34_sample.csv"),
+    out_dir: Path = Path("artifacts"),
+    start: str = "2000-01",
+) -> None:
     """Run the SST ETL workflow end-to-end.
 
     Parameters
@@ -49,6 +52,7 @@ def run(sst: Path = Path("data/sst_sample.csv"),
     fig = make_trend_plot(joined)
     fig.savefig(out_dir / "trends.png", dpi=150, bbox_inches="tight")
     print(f"Wrote {out_dir / 'summary.csv'} and {out_dir / 'trends.png'}")
+
 
 if __name__ == "__main__":  # pragma: no cover
     app()

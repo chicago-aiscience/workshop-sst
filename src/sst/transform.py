@@ -1,9 +1,8 @@
 """Transform utilities for preparing SST and ENSO time series."""
 
-from typing import Optional
-
 import numpy as np
 import pandas as pd
+
 
 def tidy(df: pd.DataFrame, date_col: str, value_col: str, roll: int = 12) -> pd.DataFrame:
     """Create a tidy, chronologically ordered DataFrame with rolling means.
@@ -41,7 +40,8 @@ def tidy(df: pd.DataFrame, date_col: str, value_col: str, roll: int = 12) -> pd.
     out[f"{value_col}_roll{roll}"] = out[value_col].rolling(roll, min_periods=1).mean()
     return out
 
-def join_on_month(sst: pd.DataFrame, enso: pd.DataFrame, start: Optional[str] = None) -> pd.DataFrame:
+
+def join_on_month(sst: pd.DataFrame, enso: pd.DataFrame, start: str | None = None) -> pd.DataFrame:
     """Join SST and ENSO records on their monthly ``date`` column.
 
     Parameters
@@ -73,6 +73,7 @@ def join_on_month(sst: pd.DataFrame, enso: pd.DataFrame, start: Optional[str] = 
     if start:
         df = df[df["date"] >= pd.to_datetime(start)]
     return df.reset_index(drop=True)
+
 
 def _simple_trend(y: pd.Series, per: str = "decade") -> float:
     """Compute a linear trend in the provided series.
@@ -111,6 +112,7 @@ def _simple_trend(y: pd.Series, per: str = "decade") -> float:
 
     return slope * 10.0 if per == "decade" else slope
 
+
 def _delta_last_year(s: pd.Series) -> float:
     """Average difference between the most recent and prior 12 months.
 
@@ -139,6 +141,7 @@ def _delta_last_year(s: pd.Series) -> float:
     if len(s) < 24:
         return float("nan")
     return float(s.tail(12).mean() - s.tail(24).head(12).mean())
+
 
 def metrics(df: pd.DataFrame) -> pd.DataFrame:
     """Summarize rolling SST and ENSO time series with key indicators.
@@ -169,8 +172,16 @@ def metrics(df: pd.DataFrame) -> pd.DataFrame:
 
     d = df.set_index("date")
 
-    sst_col = "sst_c_roll12" if "sst_c_roll12" in d.columns else [c for c in d.columns if c.startswith("sst_c_roll")][0]
-    enso_col = "nino34_roll12" if "nino34_roll12" in d.columns else [c for c in d.columns if c.startswith("nino34_roll")][0]
+    sst_col = (
+        "sst_c_roll12"
+        if "sst_c_roll12" in d.columns
+        else [c for c in d.columns if c.startswith("sst_c_roll")][0]
+    )
+    enso_col = (
+        "nino34_roll12"
+        if "nino34_roll12" in d.columns
+        else [c for c in d.columns if c.startswith("nino34_roll")][0]
+    )
 
     sst_trend_c_per_dec = _simple_trend(d[sst_col].dropna(), per="decade")
 
@@ -179,10 +190,20 @@ def metrics(df: pd.DataFrame) -> pd.DataFrame:
 
     corr = d[sst_col].corr(d[enso_col])
 
-    return pd.DataFrame([{
-        "sst_trend_c_per_decade": round(sst_trend_c_per_dec, 3) if pd.notna(sst_trend_c_per_dec) else None,
-        "delta_sst_last_yr_c": round(delta_sst_lastyr, 3) if pd.notna(delta_sst_lastyr) else None,
-        "delta_enso_last_yr": round(delta_enso_lastyr, 3) if pd.notna(delta_enso_lastyr) else None,
-        "corr_sst_enso_roll": round(float(corr), 3) if pd.notna(corr) else None,
-        "n_months": int(len(d))
-    }])
+    return pd.DataFrame(
+        [
+            {
+                "sst_trend_c_per_decade": (
+                    round(sst_trend_c_per_dec, 3) if pd.notna(sst_trend_c_per_dec) else None
+                ),
+                "delta_sst_last_yr_c": (
+                    round(delta_sst_lastyr, 3) if pd.notna(delta_sst_lastyr) else None
+                ),
+                "delta_enso_last_yr": (
+                    round(delta_enso_lastyr, 3) if pd.notna(delta_enso_lastyr) else None
+                ),
+                "corr_sst_enso_roll": round(float(corr), 3) if pd.notna(corr) else None,
+                "n_months": int(len(d)),
+            }
+        ]
+    )

@@ -3,7 +3,8 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def make_trend_plot(df: pd.DataFrame):
+
+def make_trend_plot(df: pd.DataFrame) -> plt.Figure:
     """Create a dual-axis plot for rolling SST and ENSO series.
 
     Parameters

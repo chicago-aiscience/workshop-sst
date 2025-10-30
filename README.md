@@ -29,6 +29,7 @@ pip install -e '.[dev]'
 
 ```bash
 pre-commit install  # enable local formatting and linting checks
+pre-commit run --all-files  # run pre-commit on all files
 ```
 
 ## Get Started
