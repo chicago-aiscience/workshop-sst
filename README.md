@@ -58,6 +58,21 @@ Artifacts land in `artifacts/summary.csv` and `artifacts/trends.png`. The CLI co
 - **Code of conduct**: Be respectful and inclusive. Follow the Python Software Foundation's Code of Conduct spirit in discussions and reviews.
 - **Teaching ideas**: Try adding seasonal plots, enforcing schema validation, or practicing release workflows (e.g., tagging `v0.1.0` and attaching artifacts).
 
+## Docker Usage
+Build and run the SST ETL pipeline inside a container:
+
+```bash
+# Build the image locally (once)
+docker build -t sst .
+
+# Execute the CLI, writing outputs to ./artifacts on your host
+docker run --rm \
+  -v "$(pwd)/artifacts":/app/artifacts \
+  sst
+```
+
+Adjust the command arguments if you want to point at different input CSVs or change the output directory.
+
 ## Citation
 If you use SST ETL in teaching materials or publications, please cite it as:
 

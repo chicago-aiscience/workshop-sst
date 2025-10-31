@@ -38,6 +38,7 @@ optional-dependencies.docs = [
   "mkdocs-material>=9.5",
   "mkdocstrings[python]>=0.25",
 ]
+
 scripts.sst = "sst.cli:app"
 
 [tool.black]
