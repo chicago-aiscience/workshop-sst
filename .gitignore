@@ -38,3 +38,6 @@ artifacts/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Docs site
+site

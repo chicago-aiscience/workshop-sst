@@ -21,6 +21,7 @@ dependencies = [
   "matplotlib>=3.8",
   "numpy>=1.26",
   "pandas>=2.1",
+  "seaborn>=0.13.2",
   "typer>=0.9",
 ]
 
@@ -31,6 +32,11 @@ optional-dependencies.dev = [
   "pyproject-fmt>=1.8",
   "pytest>=7.4",
   "ruff>=0.4.10",
+]
+optional-dependencies.docs = [
+  "mkdocs>=1.6",
+  "mkdocs-material>=9.5",
+  "mkdocstrings[python]>=0.25",
 ]
 scripts.sst = "sst.cli:app"
 

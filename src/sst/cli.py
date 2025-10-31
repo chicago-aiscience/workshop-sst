@@ -5,7 +5,7 @@ from pathlib import Path
 import typer
 
 from .io import load_enso, load_sst
-from .plot import make_trend_plot
+from .plot import make_corr_plot, make_trend_plot
 from .transform import join_on_month, metrics, tidy
 
 app = typer.Typer(help="SST CLI")
@@ -51,7 +51,12 @@ def run(
 
     fig = make_trend_plot(joined)
     fig.savefig(out_dir / "trends.png", dpi=150, bbox_inches="tight")
-    print(f"Wrote {out_dir / 'summary.csv'} and {out_dir / 'trends.png'}")
+
+    fig = make_corr_plot(joined)
+    fig.savefig(out_dir / "scatter_plot.png", dpi=150, bbox_inches="tight")
+    print(
+        f"Wrote {out_dir / 'summary.csv'} and {out_dir / 'trends.png'} and {out_dir / 'correlation.png'}"
+    )
 
 
 if __name__ == "__main__":  # pragma: no cover
