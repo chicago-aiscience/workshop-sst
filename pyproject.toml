@@ -27,6 +27,8 @@ dependencies = [
 
 optional-dependencies.dev = [
   "black>=24.3",
+  "jupyterlab>=4",
+  "mkdocs-jupyter>=0.24",
   "mypy>=1.5",
   "pre-commit>=3.7",
   "pyproject-fmt>=1.8",
@@ -35,8 +37,10 @@ optional-dependencies.dev = [
 ]
 optional-dependencies.docs = [
   "mkdocs>=1.6",
+  "mkdocs-jupyter>=0.24",
   "mkdocs-material>=9.5",
   "mkdocstrings[python]>=0.25",
+  "pymdown-extensions>=10",
 ]
 
 scripts.sst = "sst.cli:app"
