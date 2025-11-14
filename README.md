@@ -3,6 +3,7 @@
 [![status](https://img.shields.io/badge/status-teaching%20demo-blue)](#status)
 [![python](https://img.shields.io/badge/python-3.10%2B-brightgreen)](#installation)
 [![license](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
+[![DOI](https://zenodo.org/badge/1087330899.svg)](https://doi.org/10.5281/zenodo.17613101)
 
 SST ETL is a lightweight Python package and CLI (published as `sst`) that demonstrates production-minded extract-transform-load practices for climate time-series. It is designed for educators, workshop facilitators, and Python newcomers who want a realistic-yet-fast example of data engineering workflows using monthly Sea Surface Temperature (SST) and ENSO (Niño 3.4) data. The project emphasizes repeatable pipelines, documentation, testing, and CI/CD habits.
 
