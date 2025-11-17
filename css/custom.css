@@ -1,0 +1,278 @@
+/* Custom styles for Jupyter notebooks in MkDocs */
+
+/* Code cell styling */
+.jp-InputArea {
+    margin-bottom: 1em;
+}
+
+.jp-InputArea-editor {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    background-color: #fafafa;
+}
+
+.jp-CodeMirrorEditor {
+    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+/* Output area styling */
+.jp-OutputArea {
+    margin-top: 0.5em;
+    margin-bottom: 1.5em;
+}
+
+.jp-OutputArea-output {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 1em;
+    background-color: #ffffff;
+    overflow-x: auto;
+}
+
+/* Stream output (stdout/stderr) */
+.jp-OutputArea-output pre {
+    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.85em;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0.5em;
+    background-color: #f8f8f8;
+    border-radius: 3px;
+}
+
+/* Error output styling */
+.jp-OutputArea-output.jp-RenderedText[data-mime-type="application/vnd.jupyter.stderr"] {
+    background-color: #fff5f5;
+    border-left: 4px solid #e53e3e;
+    padding-left: 1em;
+}
+
+/* Display data (DataFrames, plots, etc.) */
+.jp-RenderedHTMLCommon {
+    margin: 0.5em 0;
+}
+
+/* Table styling for DataFrames */
+.jp-RenderedHTMLCommon table {
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 0.9em;
+    width: 100%;
+    overflow-x: auto;
+    display: block;
+}
+
+.jp-RenderedHTMLCommon table thead {
+    background-color: #f5f5f5;
+    font-weight: 600;
+}
+
+.jp-RenderedHTMLCommon table th,
+.jp-RenderedHTMLCommon table td {
+    padding: 0.5em 0.75em;
+    border: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+.jp-RenderedHTMLCommon table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.jp-RenderedHTMLCommon table tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+/* Image/plot styling */
+.jp-RenderedImage {
+    margin: 1em 0;
+    text-align: center;
+}
+
+.jp-RenderedImage img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Markdown cells */
+.jp-MarkdownOutput {
+    margin: 1em 0;
+    line-height: 1.6;
+}
+
+.jp-MarkdownOutput h1,
+.jp-MarkdownOutput h2,
+.jp-MarkdownOutput h3,
+.jp-MarkdownOutput h4 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+
+.jp-MarkdownOutput code {
+    background-color: #f5f5f5;
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.9em;
+    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+}
+
+.jp-MarkdownOutput pre {
+    background-color: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 1em;
+    overflow-x: auto;
+}
+
+.jp-MarkdownOutput pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+/* Cell execution count */
+.jp-InputPrompt {
+    color: #666;
+    font-size: 0.85em;
+    font-weight: 600;
+    margin-right: 0.5em;
+}
+
+/* Better spacing between cells */
+.jp-Cell {
+    margin-bottom: 2em;
+    padding: 1em;
+    border-left: 3px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.jp-Cell:hover {
+    border-left-color: #06af60;
+}
+
+/* Code cell input */
+.jp-CodeCell .jp-InputArea {
+    background-color: #fafafa;
+    border-radius: 4px;
+    padding: 0.5em;
+}
+
+/* Output cell */
+.jp-Cell.jp-mod-outputs {
+    background-color: #ffffff;
+}
+
+/* Scrollable output containers */
+.jp-OutputArea-output[data-mime-type="text/plain"] {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Syntax highlighting improvements */
+.highlight {
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    padding: 0.5em;
+}
+
+/* Improve readability of long outputs */
+.jp-OutputArea-output pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Better list styling in markdown */
+.jp-MarkdownOutput ul,
+.jp-MarkdownOutput ol {
+    margin: 0.5em 0;
+    padding-left: 2em;
+}
+
+.jp-MarkdownOutput li {
+    margin: 0.25em 0;
+}
+
+/* Blockquote styling */
+.jp-MarkdownOutput blockquote {
+    border-left: 4px solid #06af60;
+    padding-left: 1em;
+    margin: 1em 0;
+    color: #666;
+    font-style: italic;
+}
+
+/* Additional Material theme integration */
+.md-typeset .jp-Cell {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    margin: 1.5em 0;
+}
+
+/* Improve code cell visibility */
+.jp-CodeCell {
+    background-color: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 0.75em;
+}
+
+/* Better output visibility */
+.jp-OutputArea {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 0.75em;
+    margin-top: 0.5em;
+}
+
+/* Improve text output readability */
+.jp-OutputArea-output[data-mime-type="text/plain"] {
+    font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+    font-size: 0.9em;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Better DataFrame display */
+.jp-RenderedHTMLCommon .dataframe {
+    margin: 1em 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Improve notebook container */
+.jp-Notebook {
+    padding: 1em 0;
+}
+
+/* Cell execution indicators */
+.jp-InputPrompt {
+    min-width: 2.5em;
+    color: #999;
+    font-weight: 500;
+}
+
+/* Improve spacing in markdown cells */
+.jp-MarkdownOutput p {
+    margin: 0.75em 0;
+}
+
+/* Better code highlighting in markdown */
+.jp-MarkdownOutput pre {
+    background-color: #263238;
+    color: #eeffff;
+}
+
+/* Improve admonition boxes in notebooks */
+.jp-MarkdownOutput .admonition {
+    margin: 1em 0;
+    padding: 1em;
+    border-left: 4px solid;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+}
