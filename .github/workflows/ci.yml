@@ -40,7 +40,7 @@ jobs:
       - name: Tests
         run: pytest -q
       - name: Build artifacts
-        run: python -m tiny_sst_etl.cli run --start 2000-01
+        run: python -m sst.cli --start 2000-01
       - name: Upload plot
         uses: actions/upload-artifact@v4
         with:
