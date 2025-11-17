@@ -1,5 +1,6 @@
 """Command-line interface for running the SST ETL workflow."""
 
+import logging
 from pathlib import Path
 
 import typer
@@ -9,6 +10,12 @@ from .plot import make_corr_plot, make_trend_plot
 from .transform import join_on_month, metrics, tidy
 
 app = typer.Typer(help="SST CLI")
+logging.getLogger().setLevel(logging.INFO)
+logging.basicConfig(
+    format="%(asctime)s,%(msecs)d %(levelname)s %(message)s",
+    datefmt="%Y-%m-%dT%H:%M:%S",
+    level=logging.INFO,
+)
 
 
 @app.command("run")
@@ -48,15 +55,15 @@ def run(
 
     summary = metrics(joined)
     (out_dir / "summary.csv").write_text(summary.to_csv(index=False))
+    logging.info(f"Wrote {out_dir / 'summary.csv'}")
 
     fig = make_trend_plot(joined)
     fig.savefig(out_dir / "trends.png", dpi=150, bbox_inches="tight")
+    logging.info(f"Wrote {out_dir / 'trends.png'}")
 
     fig = make_corr_plot(joined)
     fig.savefig(out_dir / "scatter_plot.png", dpi=150, bbox_inches="tight")
-    print(
-        f"Wrote {out_dir / 'summary.csv'} and {out_dir / 'trends.png'} and {out_dir / 'correlation.png'}"
-    )
+    logging.info(f"Wrote {out_dir / 'scatter_plot.png'}")
 
 
 if __name__ == "__main__":  # pragma: no cover
