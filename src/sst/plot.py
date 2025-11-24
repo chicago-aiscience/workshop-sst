@@ -29,6 +29,8 @@ def _plot_ax_1(ax1: plt.Axes, predictions_df: pd.DataFrame, r2_score: float, rms
     ax1.set_title(f"Predictions Over Time\nR² = {r2_score: .3f}, RMSE = {rmse: .3f}")
     ax1.legend()
     ax1.grid(True, alpha=0.3)
+    # Rotate and resize date labels for better readability
+    ax1.tick_params(axis="x", rotation=90, labelsize=9)
 
 
 def _plot_ax_2(ax2: plt.Axes, predictions_df: pd.DataFrame) -> None:

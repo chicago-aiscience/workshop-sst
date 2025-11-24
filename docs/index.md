@@ -1,10 +1,10 @@
-# SST ETL
+# SST
 
-Welcome to the SST ETL project! This site provides a quick overview and key links to help you explore the repository.
+Welcome to the SST project! This site provides a quick overview and key links to help you explore the repository.
 
 ## Overview
 
-SST ETL is a lightweight Python package and CLI that showcases production-ready ETL practices for monthly Sea Surface Temperature (SST) and ENSO (Niño 3.4) data. It is designed for workshops and teaching environments, emphasizing testing, documentation, and continuous integration.
+SST is a lightweight Python package and CLI that showcases machine learning predictions using Sea Surface Temperature (SST) and ENSO (Niño 3.4) data. It is designed for workshops and teaching environments, emphasizing testing, documentation, and continuous integration.
 
 ## Quick Links
 
