@@ -86,7 +86,7 @@ docker build -t sst .
 # Execute the predict command, writing outputs to ./artifacts on your host
 docker run --rm \
   -v "$(pwd)/artifacts":/app/artifacts \
-  sst predict
+  sst
 ```
 
 Adjust the command arguments if you want to point at different input CSVs, change the output directory, or modify ML parameters (e.g., `--n-lags`, `--test-size`).
