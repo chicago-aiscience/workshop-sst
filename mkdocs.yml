@@ -21,6 +21,7 @@ nav:
       - CLI: api/cli.md
       - IO: api/io.md
       - Transform: api/transform.md
+      - ML: api/ml.md
       - Plot: api/plot.md
 plugins:
   - search
