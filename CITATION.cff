@@ -4,7 +4,7 @@ authors:
   - family-names: Tebaldi
     given-names: Nikki
     orcid: https://orcid.org/0000-0002-3958-1776
-title: "SST ETL: Sea Surface Temperature & ENSO pipeline"
+title: "SST: Sea Surface Temperature & ENSO Prediction"
 version: 0.1.1
 identifiers:
   - type: doi

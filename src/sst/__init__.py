@@ -1,6 +1,6 @@
 # __all__: list[str] = []
 
-"""SST ETL package for analyzing sea surface temperature and ENSO relationships."""
+"""SST package for machine learning prediction of ENSO from sea surface temperature."""
 
 from .ml import predict_enso_from_sst
 

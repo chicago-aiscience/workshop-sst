@@ -1,4 +1,4 @@
-"""Command-line interface for running the SST ETL workflow."""
+"""Command-line interface for SST ML prediction workflow."""
 
 import logging
 from pathlib import Path
