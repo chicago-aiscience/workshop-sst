@@ -68,6 +68,167 @@ Run tests:
 pytest -q
 ```
 
+## Developer
+
+This section provides guidance for developers who want to set up, install, run, and contribute to the SST codebase.
+
+### Prerequisites
+
+- **Python**: 3.10 or higher (3.10, 3.11, or 3.12 are supported)
+- **Git**: For version control
+- **pip**: Python package installer (usually comes with Python)
+
+### Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone <repository-url>
+   cd sst
+   ```
+
+2. **Create a virtual environment**:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
+
+3. **Install the package in development mode**:
+   ```bash
+   pip install -e '.[dev]'
+   ```
+
+   This installs the package in editable mode along with all development dependencies (testing, linting, formatting, documentation tools).
+
+### Running the Code
+
+**Run the CLI**:
+```bash
+# Using default parameters
+sst
+
+# With custom parameters
+sst --sst data/sst_sample.csv --enso data/nino34_sample.csv --out-dir artifacts --start 2000-01
+
+# Or using the convenience script
+./scripts/run_local.sh
+```
+
+**Run tests**:
+```bash
+pytest -q              # Quick test run
+pytest -v              # Verbose output
+pytest tests/          # Run specific test directory
+```
+
+### Development Workflow
+
+**Code Quality Checks**:
+
+The project uses several tools to maintain code quality. Install pre-commit hooks to run these automatically:
+
+```bash
+pre-commit install
+```
+
+**Manual checks** (run before committing):
+```bash
+# Format code with Black
+black src/ tests/
+
+# Lint with Ruff
+ruff check src/ tests/
+
+# Type checking with mypy
+mypy src/
+
+# Run all pre-commit checks
+pre-commit run --all-files
+```
+
+**Project Structure**:
+```
+sst/
+├── src/sst/          # Main package source code
+│   ├── cli.py        # Command-line interface
+│   ├── io.py         # Data loading functions
+│   ├── ml.py         # Machine learning models
+│   ├── plot.py       # Visualization functions
+│   └── transform.py  # Data transformation utilities
+├── tests/            # Test suite
+├── data/             # Sample data files
+├── docs/             # Documentation source
+├── scripts/          # Utility scripts
+└── pyproject.toml    # Project configuration and dependencies
+```
+
+### Building Documentation
+
+The project uses MkDocs for documentation. To build and serve the documentation locally:
+
+```bash
+# Install documentation dependencies
+pip install -e '.[docs]'
+
+# Serve documentation locally (with live reload)
+mkdocs serve
+
+# Build static documentation site
+mkdocs build
+```
+
+The documentation will be available at `http://127.0.0.1:8000` when using `mkdocs serve`.
+
+### Docker Development
+
+For containerized development:
+
+```bash
+# Build the Docker image
+docker build -t sst .
+
+# Run the container
+docker run --rm \
+  -v "$(pwd)/artifacts":/app/artifacts \
+  sst
+
+# Run with custom parameters
+docker run --rm \
+  -v "$(pwd)/artifacts":/app/artifacts \
+  sst --start 2000-01 --n-lags 5
+```
+
+### Contributing
+
+Before contributing, please:
+
+1. **Fork the repository** and create a feature branch
+2. **Set up your development environment** (see Setup above)
+3. **Make your changes** following the project's code style
+4. **Run tests and quality checks**:
+   ```bash
+   pytest -q
+   pre-commit run --all-files
+   ```
+5. **Add or update tests** for any behavioral changes
+6. **Update documentation** if needed
+7. **Submit a pull request** with a clear description
+
+For more detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+### Development Dependencies
+
+The project includes the following development tools (installed via `pip install -e '.[dev]'`):
+
+- **Testing**: `pytest` - Test framework
+- **Linting**: `ruff` - Fast Python linter
+- **Formatting**: `black` - Code formatter
+- **Type Checking**: `mypy` - Static type checker
+- **Pre-commit**: `pre-commit` - Git hooks framework
+- **Documentation**: `mkdocs`, `mkdocs-material`, `mkdocstrings` - Documentation tools
+- **Jupyter**: `jupyterlab` - For notebook development
+
+All development dependencies are defined in `pyproject.toml` under `optional-dependencies.dev`.
+
 ## Community
 
 - **Contributing**: Fork this repository, create a feature branch, and open a pull request. Please add or update tests for behavioral changes and run `pytest -q` plus `pre-commit run --all-files` before submitting.
