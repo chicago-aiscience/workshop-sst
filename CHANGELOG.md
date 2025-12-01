@@ -38,6 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub Actions CI/CD workflows and Docker support for containerized execution
 - Documentation with MkDocs, comprehensive README, API docs, CONTRIBUTING.md, CODE_OF_CONDUCT.md, and workshop demo notebook
 - Unit tests for CLI and ML components with test fixtures and sample data
+- Updated project to use `uv` as the recommended package manager for faster dependency installation, with `pip` remaining as an alternative option
+- Updated CI/CD workflows to use `uv` for dependency installation
 
 ---
 
