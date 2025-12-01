@@ -165,7 +165,7 @@ Here's some guidance on submitting a new feature issue:
 
 Security vulnerabilities should **not** be filed to the regular issue tracking system.
 
-Report your security vulnerabilities to (see contact links): [INSERT SECURITY CONTACT LINK HERE]
+Report your security vulnerabilities to (see contact links): ntebaldi@uchicago.edu
 
 Please be sure to:
 * Indicate the severity of the vulnerability
@@ -176,7 +176,7 @@ Please be sure to:
 
 Reviewing others' contributions is a great way to learn about best practices in both contributions as well as software.
 
-Take a look at our [pull requests tracking system]([INSERT LINK FOR PULL REQUESTS TRACKING SYSTEM]), and try the following options for providing a review:
+Take a look at our [pull requests tracking system]([https://github.com/chicago-aiscience/workshop-sst/pulls]), and try the following options for providing a review:
 1. Read the code / patch associated with the pull-request, and take note of any coding, bug, or documentation issues if found
 2. Try to recreate the pull-request patch on your local machine, and report if it has issues with your system in particular
 3. Scan over suggested feedback from other contributors, and provide feedback if necessary
@@ -198,9 +198,6 @@ Some guidelines for code-specific contributions:
 - **Keep positive** - code contributions, by their nature, have direct impacts on the output and functionality of the project. Keep a positive spirit as your code is reviewed, and take it in stride if core contributors take time to review, give you suggestions for your code or respectfully decline your contribution. This is all part of the process for quality open source development.
 - **Comments** - include *useful* comments throughout your code that explain the intention of a code block, not a step-by-step analysis. See our [inline code documentation](#inline-code-documentation) section for specifics.
 
-[INSERT ADDITIONAL SECTIONS HERE FOR MORE SPECIFIC CLASSES OF CODE CONTRIBUTIONS DEPENDING ON YOUR MODULES, LANGUAGES, PLATFORMS IN USE BY YOUR PROJECT. THE MORE DETAILS YOU OFFER, THE MORE LIKELY SOMEONE IS TO UNDERSTAND HOW TO CONTRIBUTE]
-<!-- EXAMPLE: APIs, PyTest, etc. -->
-
 ### 📖 Documentation
 
 Documentation is the core way our users and contributors learn about the project. We place a high value on the quality, thoroughness, and readability of our documentation. Writing or editing documentation is an excellent way to contribute to our project without performing active coding.
@@ -221,45 +218,14 @@ The overall structure of our project documentation is as follows:
   - [README.md](README.md) - top-level information about how to run, build, and contribute to the project
   - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) - best practices and guidance on how to work well with other people in the project, and suggestions on dealing with interpersonal issues
   - [CONTRIBUTING.md](CONTRIBUTING.md) - guidance on contributing to the project
-  - `*.[INSERT YOUR CODING LANGUAGE FILE EXTENSIONS HERE]` - inline documentation available inside code files
-- [INSERT ADDITIONAL DOCUMENTATION CLASSES AND ORGANIZATION STRUCTURE HERE, SEE EXAMPLE IN COMMENTS BELOW]
-
-<!-- EXAMPLE:
-- Source-controlled documentation
-  - [README.md](README.md) - top-level information about how to run, build, and contribute to the project
-  - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) - best practices and guidance on how to work well with other people in the project, and suggestions on dealing with interpersonal issues
-  - [CONTRIBUTING.md](CONTRIBUTING.md) - guidance on contributing to the project
-  - `*.py` - inline documentation available inside code files' function headers and code blocks
+  - `*.py` - inline documentation available inside code files
   - [docs/](docs/)` - top-level directory containing source-controlled documentation built into statically hosted files on our documentation website
-- Hosted documentation
-  - [Wiki Main-page]()
-    - [Wiki Sub-page 1]()
-    - [Wiki Sub-page 2]()
-- Discussion Boards
-  - [Discussion Board Topic 1]()
-  - [Discussion Board Topic 2]()
-- YouTube.com video tutorials
-  - [Channel page 1]()
-  - [Channel page 2]()
-- Application Programming Interface (API) documentation
-  - [Sub-module 1]()
-  - [Sub-module 2]()
-- etc.
--->
 
 For directions on contributing to our source-controlled documentation:
 1. Ensure you have development [prerequisites](#prerequisites) cleared.
 2. Have your [development environment](#developer-environment) set up properly.
 3. Go through our [development process](#our-development-process), including proposing changes to our project.
-
-<!-- OPTIONAL FOR HOSTED DOCUMENTATION >
-For directions on contributing to our hosted documentation:
-1.
-2.
-3.
-
-[INSERT HOSTED DOCUMENTATION PLATFORM SPECIFIC INSTRUCTIONS HERE FOR HOW TO CONTRIBUTE]
--->
+4. For application documentation, see [README.md#Building Documentation]
 
 #### Writing Style
 
@@ -271,7 +237,6 @@ To ensure documentation is readable and consistent by newcomers and experts alik
 
 Below are some commonly used words you'll want to leverage in your documentation contributions:
 - **GitHub** - one word, and capitalization of the 'G' and the 'H'
-- [INSERT YOUR PROJECT SPECIFIC COMMON TERMS AND HOW TO USE THEM]
 
 #### Inline Code Documentation
 
@@ -288,16 +253,14 @@ When including media into our version-control system, it is recommended to use f
 - Images: JPEG format
 - Videos: H264 MPEG format
 - Sounds: MP3 format
-<!-- ADD TO OR MODIFY ABOVE DEFAULT SUGGESTIONS -->
 
 ### ❓ Questions
 
 Answering questions is an excellent way to learn more about our project, as well as get better known in our project community.
 
 Here are just a few ways you can help answer questions for our project:
-- Answer open questions in our [discussion forum]([INSERT LINK TO DISCUSSION FORUM])
+- Answer open questions in our [discussion forum]([https://github.com/chicago-aiscience/workshop-sst/discussions])
 - Answer open questions mentioned in our [issue tracking system]([https://github.com/chicago-aiscience/workshop-sst/issues])
-<!-- ADD TO OR MODIFY DEPENDING ON YOUR COMMUNICATION CHANNELS LISTED AT THE BEGINNING OF THIS DOCUMENT-->
 
 When answering questions, keep the following in mind:
 - Be polite and friendly. See our [Code of Conduct](CODE_OF_CONDUCT.md) recommendations as you interact with others in the team.
