@@ -8,9 +8,11 @@
 SST is a lightweight Python package and CLI (published as `sst`) that demonstrates machine learning prediction of ENSO from Sea Surface Temperature data. It is designed as a workshop to serve as a quick example of ML workflows using monthly Sea Surface Temperature (SST) and ENSO (Niño 3.4) data. The project emphasizes repeatable pipelines, documentation, testing, and CI/CD habits.
 
 ## Status
+
 This project is maintained as a teaching demo. Expect stability in the CLI and dataset formats, with occasional updates to support workshops and best-practice examples.
 
 ## Features
+
 - Load curated SST and ENSO CSV samples from `data/`
 - Tidy, join, and smooth values with 12-month rolling means
 - Machine learning prediction of ENSO from SST using Random Forest with lag features
@@ -18,6 +20,7 @@ This project is maintained as a teaching demo. Expect stability in the CLI and d
 - Ship with typing, automated tests, and GitHub Actions integration for demonstration
 
 ## Installation
+
 ```bash
 python -m venv .venv && source .venv/bin/activate    # Windows: .venv\Scripts\activate
 pip install -e '.[dev]'
