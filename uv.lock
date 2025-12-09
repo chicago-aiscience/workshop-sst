@@ -3148,7 +3148,7 @@ wheels = [
 
 [[package]]
 name = "sst"
-version = "0.6.1rc1"
+version = "0.6.1"
 source = { editable = "." }
 dependencies = [
     { name = "joblib" },
