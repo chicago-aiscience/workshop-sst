@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - pyproject.toml
+      - uv.lock
   workflow_dispatch:
 
 permissions:
