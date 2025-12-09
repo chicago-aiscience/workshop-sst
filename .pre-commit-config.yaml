@@ -1,0 +1,34 @@
+repos:
+  # Black for auto code formatting
+  - repo: https://github.com/psf/black
+    rev: 24.3.0
+    hooks:
+      - id: black
+  # Linting: Python code (see the file .flake8)
+  - repo: https://github.com/PyCQA/flake8
+    rev: "6.0.0"
+    hooks:
+      - id: flake8
+  # Linter and code formatter
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.10
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+  # Static type checker
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.5.1
+    hooks:
+      - id: mypy
+  # `pyproject.toml` linter and formatter
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: 2.2.4
+    hooks:
+      - id: pyproject-fmt
+  # Misc commit checks using built in pre-commit checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-case-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace

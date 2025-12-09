@@ -1,0 +1,44 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Bytecode and C extensions
+*.so
+*.dll
+
+# Packaging
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
+.venv/
+.env/
+env/
+venv/
+
+# Tools & editors
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.idea/
+.vscode/
+
+# Logs & coverage
+*.log
+.coverage
+coverage.xml
+htmlcov/
+
+# Project artifacts
+artifacts/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docs site
+site
+.ipynb_checkpoints/
