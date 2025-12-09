@@ -179,9 +179,11 @@ jobs:
       - name: Bump and commit version
         run: |
           if [ "${{ needs.version.outputs.deploy_env }}" == "DEV" ]; then
-            uv version --bump minor --bump rc
+            uv version --bump patch --bump rc
           else
-            uv version --bump minor
+            version=$(uv version | awk '{print $2}')
+            app_version=${version%%rc*}    # Remove release candidate suffix
+            uv version $app_version
           fi
 
           git config user.name "${GITHUB_ACTOR}"
