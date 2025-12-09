@@ -13,7 +13,7 @@ concurrency:
 
 env:
   REGISTRY: ghcr.io
-  RESOURCE_NAME_DOCKER: ${{ github.repository }}-sst
+  RESOURCE_NAME_DOCKER: ${{ github.repository }}
 
 jobs:
   lint-and-format:
