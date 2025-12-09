@@ -1,0 +1,61 @@
+site_name: SST ETL
+site_url: https://example.com/sst
+theme:
+  name: material
+  palette:
+    primary: lime
+    accent: amber
+  features:
+    - navigation.expand
+    - navigation.instant
+    - navigation.path
+    - navigation.sections
+    - toc.follow
+extra_css:
+  - docs/css/custom.css
+nav:
+  - Home: index.md
+  - Notebook: workshop_sst_demo.ipynb
+  - API:
+      - Overview: api/index.md
+      - CLI: api/cli.md
+      - IO: api/io.md
+      - Transform: api/transform.md
+      - ML: api/ml.md
+      - Plot: api/plot.md
+plugins:
+  - search
+  - mkdocs-jupyter:
+      include_source: true
+      execute: false
+      ignore_h1_titles: true
+      remove_tag_config:
+        remove_cell_tags: ["hide-input", "hide-output"]
+        remove_all_outputs_tags: ["hide-output"]
+        remove_all_inputs_tags: ["hide-input"]
+  - mkdocstrings:
+      handlers:
+        python:
+          paths:
+            - src
+          options:
+            docstring_style: numpy
+            show_signature: true
+            show_source: true
+            line_length: 100
+markdown_extensions:
+  - admonition
+  - codehilite:
+      linenums: true
+      use_pygments: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - toc:
+      permalink: true
+      toc_depth: 3
