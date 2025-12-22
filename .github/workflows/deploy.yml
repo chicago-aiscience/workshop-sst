@@ -100,7 +100,6 @@ jobs:
       deploy_env: ${{ steps.dev.outputs.deploy_env != '' && steps.dev.outputs.deploy_env || steps.release.outputs.deploy_env }}
       dev_ran: ${{ steps.dev.outcome == 'success' && 'true' || 'false' }}
       release_ran: ${{ steps.release.outcome == 'success' && 'true' || 'false' }}
-      bump_type: ${{ steps.dev.outputs.bump_type != '' && steps.dev.outputs.bump_type || steps.release.outputs.bump_type }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -112,10 +111,20 @@ jobs:
         if: startsWith(github.ref, 'refs/heads/dev') || github.base_ref == 'dev'
         id: dev
         run: |
-          uv version --bump patch --bump rc
+          # Get current version
+          current_version=$(uv version | awk '{print $2}')
+
+          # Check if version already has rc suffix
+          if [[ "$current_version" == *"rc"* ]]; then
+            # Version already has rc, just increment rc (don't bump patch)
+            uv version --bump rc
+          else
+            # No rc suffix, bump patch and add rc1
+            uv version --bump patch --bump rc
+          fi
+
           echo "app_version=$(uv version | awk '{print $2}')" >> $GITHUB_OUTPUT
           echo "deploy_env=DEV" >> $GITHUB_OUTPUT
-          echo "bump_type=minor+rc" >> $GITHUB_OUTPUT
           git checkout pyproject.toml    # reset to original version
 
       - name: Next app version (release)
@@ -126,7 +135,6 @@ jobs:
           app_version=${version%%rc*}
           echo "app_version=$app_version" >> $GITHUB_OUTPUT
           echo "deploy_env=MAIN" >> $GITHUB_OUTPUT
-          echo "bump_type=minor" >> $GITHUB_OUTPUT
           git checkout pyproject.toml    # reset to original version
 
   build-deploy:
@@ -185,7 +193,17 @@ jobs:
       - name: Bump and commit version
         run: |
           if [ "${{ needs.version.outputs.deploy_env }}" == "DEV" ]; then
-            uv version --bump patch --bump rc
+            # Get current version
+            current_version=$(uv version | awk '{print $2}')
+
+            # Check if version already has rc suffix
+            if [[ "$current_version" == *"rc"* ]]; then
+              # Version already has rc, just increment rc (don't bump patch)
+              uv version --bump rc
+            else
+              # No rc suffix, bump patch and add rc1
+              uv version --bump patch --bump rc
+            fi
           else
             version=$(uv version | awk '{print $2}')
             app_version=${version%%rc*}    # Remove release candidate suffix
