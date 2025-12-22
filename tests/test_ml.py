@@ -170,9 +170,7 @@ def test_model_and_results() -> None:
     expected_residuals = predictions["actual"] - predictions["predicted"]
     residual_values = np.asarray(predictions["residual"].values)
     expected_values = np.asarray(expected_residuals.values)
-    np.testing.assert_array_almost_equal(
-        residual_values, expected_values, decimal=10
-    )
+    np.testing.assert_array_almost_equal(residual_values, expected_values, decimal=10)
 
     # Verify feature importance DataFrame
     importance = results["feature_importance"]
