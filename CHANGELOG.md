@@ -19,6 +19,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.6.2]
+
+### Added
+
+### Changed
+- Migrated to `uv` instead of `pre-commit` for lint and format
+- Use `uv` to run all CI/CD steps and execute `sst`
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
 ## [0.1.0] - 2025-12-01
 
 ### Added

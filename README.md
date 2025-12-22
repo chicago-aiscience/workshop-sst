@@ -22,6 +22,16 @@ This project is maintained as a teaching demo. Expect stability in the CLI and d
 
 ## Installation
 
+**Using `uv` (recommended)**:
+```bash
+# Install uv if you haven't already
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install the package and dependencies
+uv sync --extra dev
+```
+
+**Using pip**:
 ```bash
 python -m venv .venv && source .venv/bin/activate    # Windows: .venv\Scripts\activate
 pip install -e '.[dev]'
@@ -30,12 +40,18 @@ pip install -e '.[dev]'
 ## Additional Setup
 
 - Optional: point the CLI at your own SST/ENSO CSV files; sample data already ships in `data/`.
-- Linux/Mac users can enable tab completion for `sst` by running `eval "$(sst --install-completion)"`.
-- Optional: install pre-commit hooks to mirror the CI checks.
+- Linux/Mac users can enable tab completion for `sst` by running `eval "$(uv run sst --install-completion)"` (or `eval "$(sst --install-completion)"` if installed via pip).
+- Optional: run code quality checks locally to mirror the CI checks.
 
 ```bash
-pre-commit install  # enable local formatting and linting checks
-pre-commit run --all-files  # run pre-commit on all files
+# Using uv (recommended)
+uv run ruff check .          # linting
+uv run ruff format --check . # formatting check
+uv run mypy src/ tests/      # type checking
+uv run pyproject-fmt --check pyproject.toml # pyproject.toml formatting
+
+# Or using pip
+ruff check . && ruff format --check . && mypy src/ tests/ && pyproject-fmt --check pyproject.toml
 ```
 
 ## Get Started
@@ -43,7 +59,8 @@ pre-commit run --all-files  # run pre-commit on all files
 Run the ML prediction workflow end-to-end:
 
 ```bash
-sst \
+# Using uv (recommended)
+uv run sst \
   --sst data/sst_sample.csv \
   --enso data/nino34_sample.csv \
   --out-dir artifacts \
@@ -53,8 +70,10 @@ sst \
 Or use the default parameters:
 
 ```bash
-sst
+uv run sst
 ```
+
+**Note**: If you installed via `pip install -e '.[dev]'` and activated the virtual environment, you can use `sst` directly instead of `uv run sst`.
 
 The CLI generates the following artifacts in the output directory:
 - `ml_predictions.csv` - Predictions with actual vs predicted values and residuals
@@ -78,12 +97,12 @@ This project uses GitHub Actions for continuous integration and deployment. The 
 
 ### What the CI/CD Pipeline Does
 
-1. **Lint and Format** - Runs pre-commit hooks to ensure code quality and formatting
+1. **Lint and Format** - Runs ruff, mypy, and pyproject-fmt to ensure code quality and formatting
 2. **Security Scanning** - Performs CodeQL analysis to detect security vulnerabilities
 3. **Testing** - Runs tests across Python 3.10, 3.11, and 3.12
 4. **Version Management** - Automatically calculates next version:
-   - `dev` branch: patch + release candidate (e.g., `0.2.0rc1`)
-   - `main` branch: minor version (e.g., `0.2.0`)
+   - `dev` branch: First push bumps patch and adds rc1, subsequent pushes increment rc (e.g., `0.6.1` → `0.6.2rc1` → `0.6.2rc2`)
+   - `main` branch: minor version (e.g., `0.6.0` → `0.7.0`)
 5. **Docker Build** - Builds and pushes Docker images to GitHub Container Registry
 6. **Release** - On successful deployment, creates git tags and GitHub releases
 
@@ -92,14 +111,19 @@ This project uses GitHub Actions for continuous integration and deployment. The 
 The project follows semantic versioning with automated version bumps:
 
 - **Dev branch** (`dev`):
-  - Bumps **patch** version and adds release candidate suffix
-  - Example: `0.1.0` → `0.1.1rc1` → `0.1.1rc2` → ...
+  - **First push**: Bumps **patch** version and adds release candidate suffix (rc1)
+  - **Subsequent pushes**: Only increments the release candidate number (rc2, rc3, etc.)
+  - Example: If `main` is at `0.6.1`:
+    - First push to `dev`: `0.6.1` → `0.6.2rc1`
+    - Second push to `dev`: `0.6.2rc1` → `0.6.2rc2`
+    - Third push to `dev`: `0.6.2rc2` → `0.6.2rc3`
   - Creates prerelease tags and GitHub releases
   - Used for development and testing
 
 - **Main branch** (`main`):
   - Bumps **minor** version for production releases
-  - Example: `0.1.0` → `0.2.0` → `0.3.0` → ...
+  - Strips any release candidate suffix if present
+  - Example: `0.6.0` → `0.7.0`, or `0.6.2rc3` → `0.7.0`
   - Creates stable release tags and GitHub releases
   - Used for production deployments
 
@@ -108,9 +132,15 @@ The project follows semantic versioning with automated version bumps:
 2. Docker images are tagged with the calculated version
 3. Version bump is committed to repository only after successful Docker build
 4. Git tags and GitHub releases are created with the new version
-5. Version bump commits include `[skip ci]` to prevent workflow loops
+5. Workflow automatically skips runs when only version files (`pyproject.toml`, `uv.lock`) change
 
 This ensures the repository version always matches what was actually deployed.
+
+**How Version Bumping Works**:
+- The workflow checks if the current version already has a release candidate suffix
+- If it has `rc`: Only increments the rc number (e.g., `rc1` → `rc2`)
+- If it doesn't have `rc`: Bumps the patch version and adds `rc1` (e.g., `0.6.1` → `0.6.2rc1`)
+- This allows multiple development iterations on the same patch version before promoting to main
 
 ### Viewing CI/CD Status
 
@@ -126,7 +156,7 @@ This section provides guidance for developers who want to set up, install, run, 
 
 - **Python**: 3.10 or higher (3.10, 3.11, or 3.12 are supported)
 - **Git**: For version control
-- **pip**: Python package installer (usually comes with Python)
+- **uv** (recommended) or **pip**: Python package manager
 
 ### Setup
 
@@ -136,14 +166,21 @@ This section provides guidance for developers who want to set up, install, run, 
    cd sst
    ```
 
-2. **Create a virtual environment**:
+2. **Install the package and dependencies**:
+
+   **Using `uv` (recommended)**:
+   ```bash
+   # Install uv if you haven't already
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+
+   # Install the package and all development dependencies
+   uv sync --extra dev
+   ```
+
+   **Using pip**:
    ```bash
    python -m venv .venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
-
-3. **Install the package in development mode**:
-   ```bash
    pip install -e '.[dev]'
    ```
 
@@ -153,10 +190,12 @@ This section provides guidance for developers who want to set up, install, run, 
 
 **Run the CLI**:
 ```bash
-# Using default parameters
-sst
+# Using uv (recommended)
+uv run sst                                    # Using default parameters
+uv run sst --sst data/sst_sample.csv --enso data/nino34_sample.csv --out-dir artifacts --start 2000-01
 
-# With custom parameters
+# Using pip (if installed via pip)
+sst                                           # Using default parameters
 sst --sst data/sst_sample.csv --enso data/nino34_sample.csv --out-dir artifacts --start 2000-01
 
 # Or using the convenience script
@@ -165,6 +204,12 @@ sst --sst data/sst_sample.csv --enso data/nino34_sample.csv --out-dir artifacts 
 
 **Run tests**:
 ```bash
+# Using uv (recommended)
+uv run pytest -q              # Quick test run
+uv run pytest -v              # Verbose output
+uv run pytest tests/          # Run specific test directory
+
+# Using pip
 pytest -q              # Quick test run
 pytest -v              # Verbose output
 pytest tests/          # Run specific test directory
@@ -174,25 +219,39 @@ pytest tests/          # Run specific test directory
 
 **Code Quality Checks**:
 
-The project uses several tools to maintain code quality. Install pre-commit hooks to run these automatically:
+The project uses several tools to maintain code quality. Run these checks before committing:
 
+**Using `uv` (recommended)**:
 ```bash
-pre-commit install
-```
+# Lint with ruff
+uv run ruff check .
 
-**Manual checks** (run before committing):
-```bash
-# Format code with Black
-black src/ tests/
-
-# Lint with Ruff
-ruff check src/ tests/
+# Format check with ruff
+uv run ruff format --check .
 
 # Type checking with mypy
-mypy src/
+uv run mypy src/ tests/
 
-# Run all pre-commit checks
-pre-commit run --all-files
+# Format pyproject.toml
+uv run pyproject-fmt --check pyproject.toml
+
+# Or run all checks at once
+uv run ruff check . && uv run ruff format --check . && uv run mypy src/ tests/ && uv run pyproject-fmt --check pyproject.toml
+```
+
+**Using pip**:
+```bash
+# Lint with ruff
+ruff check .
+
+# Format check with ruff
+ruff format --check .
+
+# Type checking with mypy
+mypy src/ tests/
+
+# Format pyproject.toml
+pyproject-fmt --check pyproject.toml
 ```
 
 **Project Structure**:
@@ -215,6 +274,19 @@ sst/
 
 The project uses MkDocs for documentation. To build and serve the documentation locally:
 
+**Using `uv` (recommended)**:
+```bash
+# Install documentation dependencies
+uv sync --extra docs
+
+# Serve documentation locally (with live reload)
+uv run mkdocs serve
+
+# Build static documentation site
+uv run mkdocs build
+```
+
+**Using pip**:
 ```bash
 # Install documentation dependencies
 pip install -e '.[docs]'
@@ -264,8 +336,13 @@ Before contributing, please:
 3. **Make your changes** following the project's code style
 4. **Run tests and quality checks**:
    ```bash
+   # Using uv (recommended)
+   uv run pytest -q
+   uv run ruff check . && uv run ruff format --check . && uv run mypy src/ tests/ && uv run pyproject-fmt --check pyproject.toml
+
+   # Using pip
    pytest -q
-   pre-commit run --all-files
+   ruff check . && ruff format --check . && mypy src/ tests/ && pyproject-fmt --check pyproject.toml
    ```
 5. **Add or update tests** for any behavioral changes
 6. **Update documentation** if needed
@@ -275,13 +352,12 @@ For more detailed contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md
 
 ### Development Dependencies
 
-The project includes the following development tools (installed via `pip install -e '.[dev]'`):
+The project includes the following development tools (installed via `uv sync --extra dev` or `pip install -e '.[dev]'`):
 
 - **Testing**: `pytest` - Test framework
-- **Linting**: `ruff` - Fast Python linter
-- **Formatting**: `black` - Code formatter
+- **Linting & Formatting**: `ruff` - Fast Python linter and formatter (replaces Black and Flake8)
 - **Type Checking**: `mypy` - Static type checker
-- **Pre-commit**: `pre-commit` - Git hooks framework
+- **Configuration Formatting**: `pyproject-fmt` - pyproject.toml formatter
 - **Documentation**: `mkdocs`, `mkdocs-material`, `mkdocstrings` - Documentation tools
 - **Jupyter**: `jupyterlab` - For notebook development
 
@@ -289,7 +365,7 @@ All development dependencies are defined in `pyproject.toml` under `optional-dep
 
 ## Community
 
-- **Contributing**: Fork this repository, create a feature branch, and open a pull request. Please add or update tests for behavioral changes and run `pytest -q` plus `pre-commit run --all-files` before submitting.
+- **Contributing**: Fork this repository, create a feature branch, and open a pull request. Please add or update tests for behavioral changes and run `pytest -q` plus code quality checks (`ruff check .`, `ruff format --check .`, `mypy src/ tests/`, `pyproject-fmt --check pyproject.toml`) before submitting.
 - **Discussions & issues**: Use GitHub Issues to request features, report bugs, or share teaching ideas. We welcome suggestions that improve clarity for workshop audiences.
 - **Code of conduct**: Be respectful and inclusive. Follow the Python Software Foundation's Code of Conduct spirit in discussions and reviews.
 - **Teaching ideas**: Try adding seasonal plots, enforcing schema validation, or practicing release workflows (e.g., tagging `v0.1.0` and attaching artifacts).

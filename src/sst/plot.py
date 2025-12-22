@@ -152,8 +152,17 @@ def make_ml_prediction_plot(results: dict[str, float | pd.DataFrame]) -> plt.Fig
     """
     predictions_df = results["predictions"]
     importance_df = results["feature_importance"]
-    r2_score = results["r2_score"]
-    rmse = results["rmse"]
+    r2_score_val = results["r2_score"]
+    rmse_val = results["rmse"]
+
+    # Type assertions for mypy
+    assert isinstance(predictions_df, pd.DataFrame), "predictions must be a DataFrame"
+    assert isinstance(importance_df, pd.DataFrame), "feature_importance must be a DataFrame"
+    assert isinstance(r2_score_val, float), "r2_score must be a float"
+    assert isinstance(rmse_val, float), "rmse must be a float"
+
+    r2_score: float = r2_score_val
+    rmse: float = rmse_val
 
     sns.set_theme(style="whitegrid")
     fig = plt.figure(figsize=(14, 5))

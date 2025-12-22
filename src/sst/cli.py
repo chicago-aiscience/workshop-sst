@@ -88,13 +88,17 @@ def predict(
 
     # Save predictions CSV
     predictions_path = out_dir / "ml_predictions.csv"
-    predictions_df: pd.DataFrame = results["predictions"]
+    predictions_value = results["predictions"]
+    assert isinstance(predictions_value, pd.DataFrame), "predictions must be a DataFrame"
+    predictions_df: pd.DataFrame = predictions_value
     predictions_df.to_csv(predictions_path, index=False)
     logging.info(f"Wrote {predictions_path}")
 
     # Save feature importance CSV
     importance_path = out_dir / "ml_feature_importance.csv"
-    importance_df: pd.DataFrame = results["feature_importance"]
+    importance_value = results["feature_importance"]
+    assert isinstance(importance_value, pd.DataFrame), "feature_importance must be a DataFrame"
+    importance_df: pd.DataFrame = importance_value
     importance_df.to_csv(importance_path, index=False)
     logging.info(f"Wrote {importance_path}")
 

@@ -70,7 +70,7 @@ def _prep_data(
 
     # Prepare features and target
     X = data[feature_names].values
-    y = data[target_col].values
+    y = np.asarray(data[target_col].values)
     return X, y, data, feature_names
 
 
