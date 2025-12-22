@@ -101,8 +101,8 @@ This project uses GitHub Actions for continuous integration and deployment. The 
 2. **Security Scanning** - Performs CodeQL analysis to detect security vulnerabilities
 3. **Testing** - Runs tests across Python 3.10, 3.11, and 3.12
 4. **Version Management** - Automatically calculates next version:
-   - `dev` branch: patch + release candidate (e.g., `0.2.0rc1`)
-   - `main` branch: minor version (e.g., `0.2.0`)
+   - `dev` branch: First push bumps patch and adds rc1, subsequent pushes increment rc (e.g., `0.6.1` → `0.6.2rc1` → `0.6.2rc2`)
+   - `main` branch: minor version (e.g., `0.6.0` → `0.7.0`)
 5. **Docker Build** - Builds and pushes Docker images to GitHub Container Registry
 6. **Release** - On successful deployment, creates git tags and GitHub releases
 
@@ -111,14 +111,19 @@ This project uses GitHub Actions for continuous integration and deployment. The 
 The project follows semantic versioning with automated version bumps:
 
 - **Dev branch** (`dev`):
-  - Bumps **patch** version and adds release candidate suffix
-  - Example: `0.1.0` → `0.1.1rc1` → `0.1.1rc2` → ...
+  - **First push**: Bumps **patch** version and adds release candidate suffix (rc1)
+  - **Subsequent pushes**: Only increments the release candidate number (rc2, rc3, etc.)
+  - Example: If `main` is at `0.6.1`:
+    - First push to `dev`: `0.6.1` → `0.6.2rc1`
+    - Second push to `dev`: `0.6.2rc1` → `0.6.2rc2`
+    - Third push to `dev`: `0.6.2rc2` → `0.6.2rc3`
   - Creates prerelease tags and GitHub releases
   - Used for development and testing
 
 - **Main branch** (`main`):
   - Bumps **minor** version for production releases
-  - Example: `0.1.0` → `0.2.0` → `0.3.0` → ...
+  - Strips any release candidate suffix if present
+  - Example: `0.6.0` → `0.7.0`, or `0.6.2rc3` → `0.7.0`
   - Creates stable release tags and GitHub releases
   - Used for production deployments
 
@@ -127,9 +132,15 @@ The project follows semantic versioning with automated version bumps:
 2. Docker images are tagged with the calculated version
 3. Version bump is committed to repository only after successful Docker build
 4. Git tags and GitHub releases are created with the new version
-5. Version bump commits include `[skip ci]` to prevent workflow loops
+5. Workflow automatically skips runs when only version files (`pyproject.toml`, `uv.lock`) change
 
 This ensures the repository version always matches what was actually deployed.
+
+**How Version Bumping Works**:
+- The workflow checks if the current version already has a release candidate suffix
+- If it has `rc`: Only increments the rc number (e.g., `rc1` → `rc2`)
+- If it doesn't have `rc`: Bumps the patch version and adds `rc1` (e.g., `0.6.1` → `0.6.2rc1`)
+- This allows multiple development iterations on the same patch version before promoting to main
 
 ### Viewing CI/CD Status
 
