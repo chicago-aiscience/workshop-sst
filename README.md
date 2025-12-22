@@ -40,7 +40,7 @@ pip install -e '.[dev]'
 ## Additional Setup
 
 - Optional: point the CLI at your own SST/ENSO CSV files; sample data already ships in `data/`.
-- Linux/Mac users can enable tab completion for `sst` by running `eval "$(sst --install-completion)"`.
+- Linux/Mac users can enable tab completion for `sst` by running `eval "$(uv run sst --install-completion)"` (or `eval "$(sst --install-completion)"` if installed via pip).
 - Optional: run code quality checks locally to mirror the CI checks.
 
 ```bash
@@ -48,10 +48,10 @@ pip install -e '.[dev]'
 uv run ruff check .          # linting
 uv run ruff format --check . # formatting check
 uv run mypy src/ tests/      # type checking
-uv run pyproject-fmt --check # pyproject.toml formatting
+uv run pyproject-fmt --check pyproject.toml # pyproject.toml formatting
 
 # Or using pip
-ruff check . && ruff format --check . && mypy src/ tests/ && pyproject-fmt --check
+ruff check . && ruff format --check . && mypy src/ tests/ && pyproject-fmt --check pyproject.toml
 ```
 
 ## Get Started
@@ -59,7 +59,8 @@ ruff check . && ruff format --check . && mypy src/ tests/ && pyproject-fmt --che
 Run the ML prediction workflow end-to-end:
 
 ```bash
-sst \
+# Using uv (recommended)
+uv run sst \
   --sst data/sst_sample.csv \
   --enso data/nino34_sample.csv \
   --out-dir artifacts \
@@ -69,8 +70,10 @@ sst \
 Or use the default parameters:
 
 ```bash
-sst
+uv run sst
 ```
+
+**Note**: If you installed via `pip install -e '.[dev]'` and activated the virtual environment, you can use `sst` directly instead of `uv run sst`.
 
 The CLI generates the following artifacts in the output directory:
 - `ml_predictions.csv` - Predictions with actual vs predicted values and residuals
@@ -219,10 +222,10 @@ uv run ruff format --check .
 uv run mypy src/ tests/
 
 # Format pyproject.toml
-uv run pyproject-fmt --check
+uv run pyproject-fmt --check pyproject.toml
 
 # Or run all checks at once
-uv run ruff check . && uv run ruff format --check . && uv run mypy src/ tests/ && uv run pyproject-fmt --check
+uv run ruff check . && uv run ruff format --check . && uv run mypy src/ tests/ && uv run pyproject-fmt --check pyproject.toml
 ```
 
 **Using pip**:
@@ -237,7 +240,7 @@ ruff format --check .
 mypy src/ tests/
 
 # Format pyproject.toml
-pyproject-fmt --check
+pyproject-fmt --check pyproject.toml
 ```
 
 **Project Structure**:
@@ -324,11 +327,11 @@ Before contributing, please:
    ```bash
    # Using uv (recommended)
    uv run pytest -q
-   uv run ruff check . && uv run ruff format --check . && uv run mypy src/ tests/ && uv run pyproject-fmt --check
+   uv run ruff check . && uv run ruff format --check . && uv run mypy src/ tests/ && uv run pyproject-fmt --check pyproject.toml
 
    # Using pip
    pytest -q
-   ruff check . && ruff format --check . && mypy src/ tests/ && pyproject-fmt --check
+   ruff check . && ruff format --check . && mypy src/ tests/ && pyproject-fmt --check pyproject.toml
    ```
 5. **Add or update tests** for any behavioral changes
 6. **Update documentation** if needed
@@ -351,7 +354,7 @@ All development dependencies are defined in `pyproject.toml` under `optional-dep
 
 ## Community
 
-- **Contributing**: Fork this repository, create a feature branch, and open a pull request. Please add or update tests for behavioral changes and run `pytest -q` plus code quality checks (`ruff check .`, `ruff format --check .`, `mypy src/ tests/`, `pyproject-fmt --check`) before submitting.
+- **Contributing**: Fork this repository, create a feature branch, and open a pull request. Please add or update tests for behavioral changes and run `pytest -q` plus code quality checks (`ruff check .`, `ruff format --check .`, `mypy src/ tests/`, `pyproject-fmt --check pyproject.toml`) before submitting.
 - **Discussions & issues**: Use GitHub Issues to request features, report bugs, or share teaching ideas. We welcome suggestions that improve clarity for workshop audiences.
 - **Code of conduct**: Be respectful and inclusive. Follow the Python Software Foundation's Code of Conduct spirit in discussions and reviews.
 - **Teaching ideas**: Try adding seasonal plots, enforcing schema validation, or practicing release workflows (e.g., tagging `v0.1.0` and attaching artifacts).

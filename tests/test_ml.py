@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from joblib import load
+
 from sst.io import load_enso, load_sst
 from sst.ml import _prep_data, predict_enso_from_sst
 from sst.transform import join_on_month, tidy
@@ -167,8 +168,10 @@ def test_model_and_results() -> None:
 
     # Verify residuals are calculated correctly
     expected_residuals = predictions["actual"] - predictions["predicted"]
+    residual_values = np.asarray(predictions["residual"].values)
+    expected_values = np.asarray(expected_residuals.values)
     np.testing.assert_array_almost_equal(
-        predictions["residual"].values, expected_residuals.values, decimal=10
+        residual_values, expected_values, decimal=10
     )
 
     # Verify feature importance DataFrame
