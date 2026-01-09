@@ -204,7 +204,8 @@ jobs:
               # No rc suffix, bump patch and add rc1
               uv version --bump patch --bump rc
             fi
-          else
+
+            else
             version=$(uv version | awk '{print $2}')
             app_version=${version%%rc*}    # Remove release candidate suffix
             uv version $app_version
