@@ -23,12 +23,12 @@ COPY data ./data
 COPY scripts ./scripts
 
 # Install project.
-RUN pip install --upgrade pip \
-    && pip install --no-cache-dir .
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+RUN uv sync
 
 # Default artifacts directory (mounted volume can override).
 VOLUME ["/app/artifacts"]
 
 # Execute the container
-ENTRYPOINT ["python", "-m", "sst.cli"]
+ENTRYPOINT ["uv", "run", "sst"]
 CMD ["--sst", "data/sst_sample.csv", "--enso", "data/nino34_sample.csv", "--out-dir", "artifacts", "--start", "2000-01"]
