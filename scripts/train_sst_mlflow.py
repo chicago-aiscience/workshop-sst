@@ -30,6 +30,7 @@ from pathlib import Path
 
 import joblib
 import mlflow
+import mlflow.data
 import mlflow.sklearn
 from mlflow.models import infer_signature
 from mlflow.tracking import MlflowClient
@@ -67,7 +68,8 @@ def get_package_version() -> str:
     Returns:
         Package version string
     """
-    pyproject_path = Path(__file__).parent.parent.parent / "pyproject.toml"
+    # Script is at scripts/train_sst_mlflow.py, so need 2 parent calls to reach repo root
+    pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
     if pyproject_path.exists():
         with open(pyproject_path, "rb") as f:
             pyproject_data = tomllib.load(f)
@@ -164,6 +166,15 @@ def load_and_prepare_data(cfg: Config):
     logging.info(f"Total samples: {len(joined)}")
     mlflow.set_tag("total_samples", len(joined))
     mlflow.set_tag("data_root", str(data_root))
+
+    # Log dataset to MLflow
+    dataset = mlflow.data.from_pandas(
+        joined,
+        source=str(data_root),
+        name="sst_enso_dataset",
+        targets=cfg.target_col
+    )
+    mlflow.log_input(dataset, context="training")
 
     return joined
 
