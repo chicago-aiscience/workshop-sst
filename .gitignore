@@ -35,6 +35,10 @@ htmlcov/
 # Project artifacts
 artifacts/
 
+# MLflow experiment tracking
+runs/
+mlruns/
+
 # OS files
 .DS_Store
 Thumbs.db
