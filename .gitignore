@@ -36,7 +36,9 @@ htmlcov/
 artifacts/
 
 # MLflow experiment tracking
-runs/
+runs/**
+!runs/**/
+!runs/**/*.dvc
 mlruns/
 mlflow.db
 
