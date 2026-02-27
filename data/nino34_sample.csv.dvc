@@ -1,0 +1,5 @@
+outs:
+- md5: af5118ccfd637b0b90349921e7146663
+  size: 2095
+  hash: md5
+  path: nino34_sample.csv
