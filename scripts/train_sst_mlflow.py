@@ -49,7 +49,6 @@ logging.basicConfig(
 )
 
 
-
 @dataclass
 class Config:
     """Training configuration for SST-ENSO prediction."""
@@ -365,7 +364,9 @@ def register_model(cfg: Config, results: dict, model_path: Path, version: str) -
             value=version
         )
 
-    logging.info(f"\n✓ Model registered to MLflow Model Registry as 'sst_enso_predictor' (package version: {version})")
+    logging.info(f"✓ Model registered to MLflow Model Registry as 'sst_enso_predictor' (package version: {version})")
+    artifact_uri = mlflow.get_artifact_uri("model/model.pkl")
+    logging.info(f"Registed model file: {artifact_uri}")
 
 
 def parse_args() -> argparse.Namespace:
@@ -406,6 +407,7 @@ def main() -> None:
 
     # Train model
     results, model_path = train_model(cfg, data, work_dir)
+    logging.info(f"Model saved here: {model_path}")
 
     # Log metrics
     log_metrics(results)
@@ -417,9 +419,9 @@ def main() -> None:
     register_model(cfg, results, model_path, version)
 
     # logging.info summary
-    logging.info(f"\n✓ Artifacts saved to: {work_dir}")
+    logging.info(f"✓ Artifacts saved to: {work_dir}")
     logging.info(f"✓ MLflow tracking URI: {mlruns_dir}")
-    logging.info("\nTo view results, run:")
+    logging.info("To view results, run:")
     logging.info(f"  mlflow ui --backend-store-uri {mlruns_dir}")
 
     mlflow.end_run()
