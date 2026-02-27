@@ -29,6 +29,8 @@ import tomllib
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+import yaml
+
 import joblib
 import mlflow
 import mlflow.data
@@ -294,6 +296,38 @@ def log_metrics(results: dict) -> None:
     mlflow.log_metric("test_rmse", results["rmse"])
 
 
+def log_dvc_tags(data_dvc_path: Path, model_path: Path) -> None:
+    """Run dvc add to update .dvc pointer files, then log content hashes as MLflow tags.
+
+    Args:
+        data_dvc_path: Path to the .dvc pointer file for the input data
+        model_path: Path to the saved model file
+    """
+    data_file_path = data_dvc_path.with_suffix("")  # data/sst_sample.csv.dvc -> data/sst_sample.csv
+    if data_file_path.exists():
+        try:
+            subprocess.run(["dvc", "add", str(data_file_path)], check=True, capture_output=True, timeout=30)
+            with open(data_dvc_path) as f:
+                dvc_info = yaml.safe_load(f)
+            data_md5 = dvc_info.get("outs", [{}])[0].get("md5", "unknown")
+            mlflow.set_tag("dvc_data_md5", data_md5)
+            logging.info(f"DVC data md5: {data_md5}")
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError) as e:
+            logging.warning(f"Could not run dvc add on data: {e}")
+
+    if model_path.exists():
+        model_dvc_path = Path(str(model_path) + ".dvc")
+        try:
+            subprocess.run(["dvc", "add", str(model_path)], check=True, capture_output=True, timeout=60)
+            with open(model_dvc_path) as f:
+                dvc_info = yaml.safe_load(f)
+            model_md5 = dvc_info.get("outs", [{}])[0].get("md5", "unknown")
+            mlflow.set_tag("dvc_model_md5", model_md5)
+            logging.info(f"DVC model md5: {model_md5}")
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError) as e:
+            logging.warning(f"Could not run dvc add on model: {e}")
+
+
 def log_artifacts(results: dict, work_dir: Path) -> None:
     """Save and log artifacts to MLflow.
 
@@ -408,6 +442,10 @@ def main() -> None:
     # Train model
     results, model_path = train_model(cfg, data, work_dir)
     logging.info(f"Model saved here: {model_path}")
+
+    # Log DVC content hashes for data/model traceability
+    data_root = Path(os.environ.get("DATA_ROOT", "./data"))
+    log_dvc_tags(data_root / "sst_sample.csv.dvc", model_path)
 
     # Log metrics
     log_metrics(results)
