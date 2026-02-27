@@ -24,6 +24,7 @@ import argparse
 import json
 import logging
 import os
+import subprocess
 import tomllib
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -77,6 +78,56 @@ def get_package_version() -> str:
     return "unknown"
 
 
+def get_git_commit() -> dict[str, str]:
+    """Get git commit information.
+
+    Returns:
+        Dictionary with git commit SHA, branch, and repo URL
+    """
+    git_info = {
+        "commit": "unknown",
+        "branch": "unknown",
+        "repo_url": "unknown"
+    }
+
+    try:
+        # Get commit SHA
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=5
+        )
+        git_info["commit"] = result.stdout.strip()
+
+        # Get branch name
+        result = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=5
+        )
+        git_info["branch"] = result.stdout.strip()
+
+        # Get remote URL
+        result = subprocess.run(
+            ["git", "config", "--get", "remote.origin.url"],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=5
+        )
+        git_info["repo_url"] = result.stdout.strip()
+
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError):
+        # Not a git repo or git not available
+        pass
+
+    return git_info
+
+
 def setup_workspace(cfg: Config) -> tuple[Path, Path]:
     """Setup workspace directory and save configuration.
 
@@ -96,7 +147,29 @@ def setup_workspace(cfg: Config) -> tuple[Path, Path]:
     return work_dir, config_path
 
 
-def setup_mlflow(cfg: Config, work_dir: Path, config_path: Path, run_name: str | None = None) -> tuple[str, str]:
+def set_mlflow_tags(version: str, git_info: dict[str, str]) -> None:
+    """Set all MLflow tags including version and git information.
+
+    Args:
+        version: Package version string
+        git_info: Dictionary with git commit, branch, and repo URL
+    """
+    # Tag run with version
+    mlflow.set_tag("package_version", version)
+    mlflow.set_tag("mlflow.source.name", f"sst-v{version}")
+
+    # System tags (for Source field in UI)
+    mlflow.set_tag("mlflow.source.git.commit", git_info["commit"])
+    mlflow.set_tag("mlflow.source.git.branch", git_info["branch"])
+    mlflow.set_tag("mlflow.source.git.repoURL", git_info["repo_url"])
+
+    # Custom tags (visible in Tags section)
+    mlflow.set_tag("git_commit", git_info["commit"])
+    mlflow.set_tag("git_branch", git_info["branch"])
+    mlflow.set_tag("git_repo_url", git_info["repo_url"])
+
+
+def setup_mlflow(cfg: Config, work_dir: Path, config_path: Path, run_name: str | None = None) -> tuple[str, str, dict[str, str]]:
     """Setup MLflow tracking, experiment, and log initial parameters.
 
     Args:
@@ -106,7 +179,7 @@ def setup_mlflow(cfg: Config, work_dir: Path, config_path: Path, run_name: str |
         run_name: Optional name for the MLflow run
 
     Returns:
-        Tuple of (MLflow tracking directory path, package version)
+        Tuple of (MLflow tracking directory path, package version, git info)
     """
     mlruns_dir = os.environ.get("MLFLOW_TRACKING_DIR", str((work_dir / "mlruns").absolute()))
     mlflow.set_tracking_uri(f"file:{mlruns_dir}")
@@ -116,8 +189,9 @@ def setup_mlflow(cfg: Config, work_dir: Path, config_path: Path, run_name: str |
     final_run_name = run_name or os.environ.get("MLFLOW_RUN_NAME", None)
     mlflow.start_run(run_name=final_run_name)
 
-    # Get package version
+    # Get package version and git info
     version = get_package_version()
+    git_info = get_git_commit()
 
     # Log parameters
     mlflow.log_params(
@@ -131,20 +205,21 @@ def setup_mlflow(cfg: Config, work_dir: Path, config_path: Path, run_name: str |
         }
     )
 
-    # Tag run with version
-    mlflow.set_tag("package_version", version)
-    mlflow.set_tag("mlflow.source.name", f"sst-v{version}")
+    # Set all MLflow tags
+    set_mlflow_tags(version, git_info)
 
     mlflow.log_artifact(str(config_path), artifact_path="config")
 
-    return mlruns_dir, version
+    return mlruns_dir, version, git_info
 
 
-def load_and_prepare_data(cfg: Config):
+def load_and_prepare_data(cfg: Config, version: str = "unknown", git_commit: str = "unknown"):
     """Load and prepare SST and ENSO data.
 
     Args:
         cfg: Training configuration
+        version: Package version string
+        git_commit: Git commit SHA
 
     Returns:
         Joined dataframe with SST and ENSO data
@@ -167,14 +242,17 @@ def load_and_prepare_data(cfg: Config):
     mlflow.set_tag("total_samples", len(joined))
     mlflow.set_tag("data_root", str(data_root))
 
-    # Log dataset to MLflow
+    # Log dataset to MLflow with package version and git commit tags
     dataset = mlflow.data.from_pandas(
         joined,
         source=str(data_root),
         name="sst_enso_dataset",
         targets=cfg.target_col
     )
-    mlflow.log_input(dataset, context="training")
+    mlflow.log_input(dataset, context="training", tags={
+        "package_version": version,
+        "git_commit": git_commit
+    })
 
     return joined
 
@@ -317,13 +395,14 @@ def main() -> None:
     work_dir, config_path = setup_workspace(cfg)
 
     # Setup MLflow tracking
-    mlruns_dir, version = setup_mlflow(cfg, work_dir, config_path, run_name=args.run_name)
+    mlruns_dir, version, git_info = setup_mlflow(cfg, work_dir, config_path, run_name=args.run_name)
     logging.info(f"Package version: {version}")
+    logging.info(f"Git commit: {git_info['commit'][:8]}...")
     if args.run_name:
         logging.info(f"Run name: {args.run_name}")
 
     # Load and prepare data
-    data = load_and_prepare_data(cfg)
+    data = load_and_prepare_data(cfg, version, git_info["commit"])
 
     # Train model
     results, model_path = train_model(cfg, data, work_dir)

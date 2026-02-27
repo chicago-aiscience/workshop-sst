@@ -38,6 +38,7 @@ artifacts/
 # MLflow experiment tracking
 runs/
 mlruns/
+mlflow.db
 
 # OS files
 .DS_Store
