@@ -1,0 +1,5 @@
+outs:
+- md5: aaf0c2b55615d7ee99d0cf8b529f659c
+  size: 2160
+  hash: md5
+  path: sst_sample.csv
