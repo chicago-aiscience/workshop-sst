@@ -5,16 +5,16 @@ It works on both laptops and HPC clusters with SLURM.
 
 Usage:
     # Basic usage (laptop)
-    python scripts/mlflow/train_sst_mlflow.py
+    python scripts/train_sst_mlflow.py
 
     # With run name argument
-    python scripts/mlflow/train_sst_mlflow.py --run-name "experiment_1"
+    python scripts/train_sst_mlflow.py --run-name "experiment_1"
 
     # With environment variables
     export MLFLOW_EXPERIMENT_NAME="my_experiment"
     export MLFLOW_TRACKING_DIR="./runs"
     export DATA_ROOT="./data"
-    python scripts/mlflow/train_sst_mlflow.py --run-name "test_run_1"
+    python scripts/train_sst_mlflow.py --run-name "test_run_1"
 
     # View results
     mlflow ui --backend-store-uri runs/sst_enso/mlruns

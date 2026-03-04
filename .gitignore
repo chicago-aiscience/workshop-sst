@@ -37,6 +37,10 @@ artifacts/
 
 # MLflow experiment tracking
 runs/**
+
+# Weights & Biases
+wandb/
+wandb_cache/
 !runs/**/
 !runs/**/*.dvc
 mlruns/
