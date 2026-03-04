@@ -333,3 +333,4 @@ class Config:
 - [MLflow documentation](https://mlflow.org/docs/latest/index.html)
 - [Weights & Biases documentation](https://docs.wandb.ai/)
 - [DVC documentation](https://dvc.org/doc)
+- [Model Serving with Docker](model_serving.md) – Serve the model via REST API from a container

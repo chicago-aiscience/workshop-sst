@@ -50,6 +50,10 @@ optional-dependencies.docs = [
   "mkdocstrings[python]>=0.25",
   "pymdown-extensions>=10",
 ]
+optional-dependencies.serve = [
+  "fastapi>=0.115",
+  "uvicorn>=0.32",
+]
 
 scripts.sst = "sst.cli:app"
 
