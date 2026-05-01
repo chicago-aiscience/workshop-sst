@@ -1,0 +1,1751 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://example.com/sst/model_tracking/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../model_serving/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Model Tracking - SST ETL</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../docs/css/custom.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="lime" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#model-tracking-mlflow-wb-and-dvc" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="SST ETL" class="md-header__button md-logo" aria-label="SST ETL" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SST ETL
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Model Tracking
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SST ETL" class="md-nav__button md-logo" aria-label="SST ETL" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SST ETL
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Tracking
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Tracking
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mlflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MLflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MLflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-tracked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Gets Tracked
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#weights-biases-wb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Weights &amp; Biases (W&amp;B)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Weights &amp; Biases (W&amp;B)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-start_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-tracked_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Gets Tracked
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-registry_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#artifact-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Artifact Versioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offline-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chart-metrics-across-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chart Metrics Across Runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dvc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DVC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DVC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-its-used-in-this-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It's Used in This Repo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dvc-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DVC Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dvc-file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .dvc File Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-with-mlflow-and-wb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with MLflow and W&amp;B
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loading-and-using-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading and Using Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Loading and Using Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-mlflow-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From MLflow Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-wb-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From W&amp;B Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sharing-models-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sharing Models: Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparing-experiments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparing Experiments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparing Experiments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlflow_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MLflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W&amp;B
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#config-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model_serving/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Serving
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../workshop_sst_demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notebook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/io/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IO
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/transform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Transform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/ml/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ML
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/plot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mlflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MLflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MLflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-tracked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Gets Tracked
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#weights-biases-wb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Weights &amp; Biases (W&amp;B)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Weights &amp; Biases (W&amp;B)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-start_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-tracked_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Gets Tracked
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-registry_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#artifact-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Artifact Versioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#offline-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Offline Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chart-metrics-across-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chart Metrics Across Runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dvc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DVC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DVC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-its-used-in-this-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It's Used in This Repo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dvc-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DVC Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dvc-file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .dvc File Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-with-mlflow-and-wb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with MLflow and W&amp;B
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loading-and-using-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading and Using Models
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Loading and Using Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-mlflow-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From MLflow Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-wb-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        From W&amp;B Registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sharing-models-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sharing Models: Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparing-experiments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparing Experiments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparing Experiments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mlflow_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MLflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W&amp;B
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#config-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="model-tracking-mlflow-wb-and-dvc">Model Tracking: MLflow, W&amp;B, and DVC<a class="headerlink" href="#model-tracking-mlflow-wb-and-dvc" title="Permanent link">&para;</a></h1>
+<p>This document describes how MLflow, Weights &amp; Biases (W&amp;B), and DVC are used in this repository for experiment tracking, model versioning, and data traceability.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Script</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MLflow</strong></td>
+<td>Local experiment tracking, model registry, artifacts</td>
+<td><code>scripts/train_sst_mlflow.py</code></td>
+</tr>
+<tr>
+<td><strong>W&amp;B</strong></td>
+<td>Cloud experiment tracking (free tier at wandb.ai)</td>
+<td><code>scripts/train_sst_wandb.py</code></td>
+</tr>
+<tr>
+<td><strong>DVC</strong></td>
+<td>Data and model versioning; content hashes logged to MLflow/W&amp;B</td>
+<td>Both scripts</td>
+</tr>
+</tbody>
+</table>
+<p>Both training scripts share the same workflow: load SST/ENSO data, train a Random Forest model, log metrics and artifacts. The main difference is where results are stored—locally (MLflow) or in the cloud (W&amp;B).</p>
+<hr />
+<h2 id="mlflow">MLflow<a class="headerlink" href="#mlflow" title="Permanent link">&para;</a></h2>
+<p>MLflow provides local experiment tracking with a file-based backend. No account or network is required.</p>
+<h3 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Train a model</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python<span class="w"> </span>scripts/train_sst_mlflow.py
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># With custom run name</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>python<span class="w"> </span>scripts/train_sst_mlflow.py<span class="w"> </span>--run-name<span class="w"> </span><span class="s2">&quot;baseline_model&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># View results</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>mlflow<span class="w"> </span>ui<span class="w"> </span>--backend-store-uri<span class="w"> </span>runs/sst_enso/mlruns
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Open http://localhost:5000</span>
+</code></pre></div>
+<h3 id="what-gets-tracked">What Gets Tracked<a class="headerlink" href="#what-gets-tracked" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Parameters</strong>: <code>seed</code>, <code>test_size</code>, <code>n_lags</code>, <code>target_col</code>, <code>feature_col</code>, <code>roll</code></li>
+<li><strong>Metrics</strong>: R² score, RMSE</li>
+<li><strong>Tags</strong>: <code>package_version</code>, <code>git_commit</code>, <code>git_branch</code>, <code>git_repo_url</code>, <code>total_samples</code>, <code>data_root</code>, <code>dvc_data_md5</code>, <code>dvc_model_md5</code></li>
+<li><strong>Artifacts</strong>: Config JSON, predictions CSV, feature importance CSV, plot PNG</li>
+<li><strong>Model</strong>: Registered to MLflow Model Registry as <code>sst_enso_predictor</code></li>
+</ul>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">MLFLOW_EXPERIMENT_NAME</span><span class="o">=</span><span class="s2">&quot;my_experiment&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">MLFLOW_TRACKING_DIR</span><span class="o">=</span><span class="s2">&quot;./runs&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">MLFLOW_RUN_NAME</span><span class="o">=</span><span class="s2">&quot;exp_1&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">DATA_ROOT</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>python<span class="w"> </span>scripts/train_sst_mlflow.py<span class="w"> </span>--run-name<span class="w"> </span><span class="s2">&quot;exp_1&quot;</span>
+</code></pre></div>
+<h3 id="model-registry">Model Registry<a class="headerlink" href="#model-registry" title="Permanent link">&para;</a></h3>
+<p>Models are registered as <code>sst_enso_predictor</code>. Load a model:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">mlflow.sklearn</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Latest version</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">model</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;models:/sst_enso_predictor/latest&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Specific version</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">model</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;models:/sst_enso_predictor/1&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="workflow-structure">Workflow Structure<a class="headerlink" href="#workflow-structure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>runs/sst_enso/
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── mlruns/                    # MLflow tracking data
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│   └── 0/                     # Experiment ID
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│       ├── &lt;run_id&gt;/          # Individual runs
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│       └── models/            # Model Registry
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>├── model.joblib               # Trained model (local copy)
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>├── ml_predictions.csv
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>├── ml_feature_importance.csv
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>└── ml_predictions.png
+</code></pre></div>
+<hr />
+<h2 id="weights-biases-wb">Weights &amp; Biases (W&amp;B)<a class="headerlink" href="#weights-biases-wb" title="Permanent link">&para;</a></h2>
+<p>W&amp;B provides cloud-based experiment tracking on the free tier at <a href="https://wandb.ai">wandb.ai</a>.</p>
+<h3 id="quick-start_1">Quick Start<a class="headerlink" href="#quick-start_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Prerequisites: Free account at https://wandb.ai</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Login (one-time)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>wandb<span class="w"> </span>login
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Or use API key (for CI, containers, shared machines)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">WANDB_API_KEY</span><span class="o">=</span>your_api_key_here
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Train</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>python<span class="w"> </span>scripts/train_sst_wandb.py
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># With run name</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>python<span class="w"> </span>scripts/train_sst_wandb.py<span class="w"> </span>--run-name<span class="w"> </span><span class="s2">&quot;experiment_1&quot;</span>
+</code></pre></div>
+<h3 id="what-gets-tracked_1">What Gets Tracked<a class="headerlink" href="#what-gets-tracked_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Config</strong>: Same parameters as MLflow (<code>seed</code>, <code>test_size</code>, <code>n_lags</code>, etc.)</li>
+<li><strong>Metrics</strong>: R² score, RMSE (via <code>wandb.log</code>)</li>
+<li><strong>Tags</strong>: Package version, git commit, branch</li>
+<li><strong>Artifacts</strong>: Config, predictions, feature importance, plot, model (as W&amp;B Artifacts)</li>
+<li><strong>Config metadata</strong>: <code>total_samples</code>, <code>data_root</code>, <code>dvc_data_md5</code>, <code>dvc_model_md5</code></li>
+</ul>
+<h3 id="model-registry_1">Model Registry<a class="headerlink" href="#model-registry_1" title="Permanent link">&para;</a></h3>
+<p>To link the trained model to a W&amp;B Model Registry, set <code>WANDB_MODEL_REGISTRY</code> to the registry path (e.g. <code>wandb-registry-workshop-sst/models</code>). The path format is <code>wandb-registry-{REGISTRY_NAME}/{COLLECTION_NAME}</code>. Create the registry and collection in the W&amp;B UI first. The linked model is assigned an alias matching the package version (e.g. <code>v0.6.2</code>) so you can reference it as <code>wandb-registry-workshop-sst/models:v0.6.2</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">WANDB_MODEL_REGISTRY</span><span class="o">=</span><span class="s2">&quot;wandb-registry-workshop-sst/models&quot;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>python<span class="w"> </span>scripts/train_sst_wandb.py
+</code></pre></div>
+<h3 id="artifact-versioning">Artifact Versioning<a class="headerlink" href="#artifact-versioning" title="Permanent link">&para;</a></h3>
+<p>Each artifact includes <code>package_version</code> in its metadata and a custom alias <code>v{version}</code> (e.g., <code>v0.6.2</code>). You can:</p>
+<ul>
+<li><strong>View metadata</strong>: Open an artifact in the W&amp;B UI and check the metadata panel for <code>package_version</code>.</li>
+<li><strong>Reference by app version</strong>: Use <code>artifact_name:v0.6.2</code> to fetch the artifact produced by that package version, e.g. <code>sst_enso_predictor:v0.6.2</code>.</li>
+</ul>
+<h3 id="configuration_1">Configuration<a class="headerlink" href="#configuration_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">WANDB_PROJECT</span><span class="o">=</span><span class="s2">&quot;my_project&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">WANDB_ENTITY</span><span class="o">=</span><span class="s2">&quot;my_team&quot;</span><span class="w">        </span><span class="c1"># Optional for personal accounts</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">WANDB_RUN_NAME</span><span class="o">=</span><span class="s2">&quot;exp_1&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">WANDB_MODE</span><span class="o">=</span><span class="s2">&quot;offline&quot;</span><span class="w">         </span><span class="c1"># online (default), offline, or disabled</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">WANDB_DATA_DIR</span><span class="o">=</span><span class="s2">&quot;./wandb_cache&quot;</span><span class="w">  </span><span class="c1"># For restricted write environments</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">WANDB_MODEL_REGISTRY</span><span class="o">=</span><span class="s2">&quot;wandb-registry-workshop-sst/models&quot;</span><span class="w">  </span><span class="c1"># Link model to registry</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">DATA_ROOT</span><span class="o">=</span><span class="s2">&quot;./data&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>python<span class="w"> </span>scripts/train_sst_wandb.py<span class="w"> </span>--run-name<span class="w"> </span><span class="s2">&quot;exp_1&quot;</span>
+</code></pre></div>
+<h3 id="offline-mode">Offline Mode<a class="headerlink" href="#offline-mode" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">WANDB_MODE</span><span class="o">=</span>offline<span class="w"> </span>python<span class="w"> </span>scripts/train_sst_wandb.py
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Later, upload: wandb sync wandb/offline-run-*</span>
+</code></pre></div>
+<h3 id="view-results">View Results<a class="headerlink" href="#view-results" title="Permanent link">&para;</a></h3>
+<p>Open the run URL printed at the end of training, or go to <a href="https://wandb.ai">wandb.ai</a> and select your project.</p>
+<h3 id="chart-metrics-across-runs">Chart Metrics Across Runs<a class="headerlink" href="#chart-metrics-across-runs" title="Permanent link">&para;</a></h3>
+<p>To compare R² and RMSE across experiments:</p>
+<ol>
+<li>Go to your <strong>project</strong> page (e.g. <code>sst_enso</code>), not a single run.</li>
+<li>Click <strong>Add panel</strong> (or <strong>+</strong> in the workspace).</li>
+<li>Choose a chart type such as <strong>Parallel coordinates</strong>, <strong>Scatter</strong>, or <strong>Bar chart</strong>.</li>
+<li>Set the <strong>X-axis</strong> or <strong>Y-axis</strong> to <code>test_r2</code> or <code>test_rmse</code>.</li>
+<li>Optionally group or color by config (e.g. <code>n_lags</code>, <code>test_size</code>).</li>
+</ol>
+<p>The runs table already lists <code>test_r2</code> and <code>test_rmse</code> per run; panels let you visualize them across runs.</p>
+<hr />
+<h2 id="dvc">DVC<a class="headerlink" href="#dvc" title="Permanent link">&para;</a></h2>
+<p>DVC (Data Version Control) is used for versioning large files—datasets and trained models—without storing them in Git. Small <code>.dvc</code> pointer files are committed instead.</p>
+<h3 id="how-its-used-in-this-repo">How It's Used in This Repo<a class="headerlink" href="#how-its-used-in-this-repo" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Data files</strong>: <code>data/sst_sample.csv</code> and <code>data/nino34_sample.csv</code> are tracked via <code>.dvc</code> files (<code>sst_sample.csv.dvc</code>, <code>nino34_sample.csv.dvc</code>).</p>
+</li>
+<li>
+<p><strong>Content hashes in experiment tracking</strong>: Both training scripts run <code>dvc add</code> on the input data and trained model, then log the MD5 content hashes to MLflow (as tags) or W&amp;B (as config). This links each experiment run to the exact data and model versions used.</p>
+</li>
+</ol>
+<h3 id="dvc-workflow">DVC Workflow<a class="headerlink" href="#dvc-workflow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Add or update data tracking</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>dvc<span class="w"> </span>add<span class="w"> </span>data/sst_sample.csv
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>dvc<span class="w"> </span>add<span class="w"> </span>data/nino34_sample.csv
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Pull data (if using remote storage)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>dvc<span class="w"> </span>pull
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Push data (if using remote storage)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>dvc<span class="w"> </span>push
+</code></pre></div>
+<h3 id="dvc-file-structure">.dvc File Structure<a class="headerlink" href="#dvc-file-structure" title="Permanent link">&para;</a></h3>
+<p>Each <code>.dvc</code> file stores metadata about the tracked file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">outs</span><span class="p">:</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">md5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">d08ae445bfa70901879bfe45ae78de40</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2160</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">hash</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">md5</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sst_sample.csv</span>
+</code></pre></div>
+<p>The <code>md5</code> hash is what gets logged to MLflow (<code>dvc_data_md5</code>, <code>dvc_model_md5</code>) or W&amp;B config for traceability.</p>
+<h3 id="integration-with-mlflow-and-wb">Integration with MLflow and W&amp;B<a class="headerlink" href="#integration-with-mlflow-and-wb" title="Permanent link">&para;</a></h3>
+<p>When you run <code>train_sst_mlflow.py</code> or <code>train_sst_wandb.py</code>:</p>
+<ol>
+<li>The script runs <code>dvc add</code> on the data files (if they exist) and the saved model.</li>
+<li>It reads the MD5 hashes from the <code>.dvc</code> files.</li>
+<li>It logs these hashes to the experiment run so you can trace which data and model produced each result.</li>
+</ol>
+<p>If DVC is not installed or <code>dvc add</code> fails (e.g., in a restricted environment), the scripts log a warning and continue without the DVC hashes.</p>
+<hr />
+<h2 id="loading-and-using-models">Loading and Using Models<a class="headerlink" href="#loading-and-using-models" title="Permanent link">&para;</a></h2>
+<h3 id="from-mlflow-registry">From MLflow Registry<a class="headerlink" href="#from-mlflow-registry" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">mlflow.sklearn</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Set tracking URI (or use MLFLOW_TRACKING_URI env var)</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="s2">&quot;file:runs/sst_enso/mlruns&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Load latest version</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="n">model</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;models:/sst_enso_predictor/latest&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Load specific version</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="n">model</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s2">&quot;models:/sst_enso_predictor/1&quot;</span><span class="p">)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Make predictions</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="from-wb-registry">From W&amp;B Registry<a class="headerlink" href="#from-wb-registry" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">joblib</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">wandb</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Option 1: Within a run (latest version)</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="k">with</span> <span class="n">wandb</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="s2">&quot;sst_enso&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">run</span><span class="p">:</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="n">artifact</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">use_artifact</span><span class="p">(</span><span class="s2">&quot;wandb-registry-workshop-sst/models:latest&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="n">artifact_dir</span> <span class="o">=</span> <span class="n">artifact</span><span class="o">.</span><span class="n">download</span><span class="p">()</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="n">model</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">artifact_dir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;model.joblib&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Option 2: Specific alias (e.g. package version v0.6.2)</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="k">with</span> <span class="n">wandb</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="s2">&quot;sst_enso&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">run</span><span class="p">:</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    <span class="n">artifact</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">use_artifact</span><span class="p">(</span><span class="s2">&quot;wandb-registry-workshop-sst/models:v0.6.2&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    <span class="n">artifact_dir</span> <span class="o">=</span> <span class="n">artifact</span><span class="o">.</span><span class="n">download</span><span class="p">()</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    <span class="n">model</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">artifact_dir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;model.joblib&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1"># Option 3: Without an active run (Public API)</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="n">api</span> <span class="o">=</span> <span class="n">wandb</span><span class="o">.</span><span class="n">Api</span><span class="p">()</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="c1"># Full path: entity/project/artifact_name:alias (see artifact&#39;s Full name in W&amp;B UI)</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="n">artifact</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">artifact</span><span class="p">(</span><span class="s2">&quot;your-entity/wandb-registry-workshop-sst/models:latest&quot;</span><span class="p">)</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="n">artifact_dir</span> <span class="o">=</span> <span class="n">artifact</span><span class="o">.</span><span class="n">download</span><span class="p">()</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="n">model</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">artifact_dir</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;model.joblib&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Note:</strong> The artifact path format is <code>wandb-registry-{REGISTRY_NAME}/{COLLECTION_NAME}:{ALIAS}</code> when used within a run. For the Public API, use the full path shown in the W&amp;B UI (e.g. <code>entity/wandb-registry-{name}/{collection}:alias</code>). Use <code>latest</code> for the most recent version, <code>v0</code>/<code>v1</code> for version indices, or a custom alias like <code>v0.6.2</code>.</p>
+<hr />
+<h2 id="sharing-models-best-practices">Sharing Models: Best Practices<a class="headerlink" href="#sharing-models-best-practices" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>MLflow</th>
+<th>W&amp;B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Location</strong></td>
+<td>Local (file-based) or remote (DB, S3)</td>
+<td>Cloud (wandb.ai)</td>
+</tr>
+<tr>
+<td><strong>Sharing</strong></td>
+<td>Share tracking URI; users need access to backend store</td>
+<td>Share project URL; team members need W&amp;B account or API key</td>
+</tr>
+<tr>
+<td><strong>Teams</strong></td>
+<td>Use remote model registry on shared storage (S3, DB)</td>
+<td>Use W&amp;B Teams with entity/project; roles: Admin, Member, View-Only</td>
+</tr>
+<tr>
+<td><strong>Access control</strong></td>
+<td>Backend storage permissions (e.g. S3 IAM)</td>
+<td>W&amp;B project visibility (private, team, public)</td>
+</tr>
+<tr>
+<td><strong>CI/CD</strong></td>
+<td>Set <code>MLFLOW_TRACKING_URI</code> and <code>MLFLOW_REGISTRY_URI</code></td>
+<td>Set <code>WANDB_API_KEY</code>; reference artifact by registry path</td>
+</tr>
+<tr>
+<td><strong>Offline</strong></td>
+<td>Fully local; no network needed</td>
+<td><code>WANDB_MODE=offline</code>; sync later with <code>wandb sync</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recommendations:</strong></p>
+<ul>
+<li><strong>MLflow</strong>: Best for local or on-premise workflows, air-gapped environments, and when you control the backend store. Use a remote tracking server or S3-backed registry for team sharing.</li>
+<li><strong>W&amp;B</strong>: Best for cloud collaboration, distributed teams, and rich dashboards. Use the Model Registry for staging/production promotion; set <code>WANDB_API_KEY</code> in CI/CD.</li>
+<li><strong>Both</strong>: Log model metadata (package version, git commit) for traceability. Use DVC hashes for data/model lineage when available.</li>
+</ul>
+<hr />
+<h2 id="comparing-experiments">Comparing Experiments<a class="headerlink" href="#comparing-experiments" title="Permanent link">&para;</a></h2>
+<h3 id="mlflow_1">MLflow<a class="headerlink" href="#mlflow_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>python<span class="w"> </span>scripts/train_sst_mlflow.py<span class="w"> </span>--run-name<span class="w"> </span><span class="s2">&quot;3_lags&quot;</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Edit Config: n_lags = 5</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>python<span class="w"> </span>scripts/train_sst_mlflow.py<span class="w"> </span>--run-name<span class="w"> </span><span class="s2">&quot;5_lags&quot;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Edit Config: test_size = 0.3</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>python<span class="w"> </span>scripts/train_sst_mlflow.py<span class="w"> </span>--run-name<span class="w"> </span><span class="s2">&quot;split_30&quot;</span>
+</code></pre></div>
+<p>Use the MLflow UI <strong>Compare</strong> button to view metrics side-by-side.</p>
+<h3 id="wb">W&amp;B<a class="headerlink" href="#wb" title="Permanent link">&para;</a></h3>
+<p>Run the same experiments with <code>train_sst_wandb.py</code>. Use the W&amp;B dashboard to filter, group, and compare runs by config and metrics.</p>
+<hr />
+<h2 id="config-parameters">Config Parameters<a class="headerlink" href="#config-parameters" title="Permanent link">&para;</a></h2>
+<p>Both scripts use the same <code>Config</code> dataclass. Edit it in the script to change hyperparameters:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nd">@dataclass</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">42</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">test_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.2</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="n">n_lags</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>      <span class="c1"># Try 5, 7, 10</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">roll</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span>
+</code></pre></div>
+<hr />
+<h2 id="tips">Tips<a class="headerlink" href="#tips" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Run names</strong>: Use descriptive names like <code>"7_lags_split_0.2"</code> instead of auto-generated IDs.</li>
+<li><strong>Version tags</strong>: Each run is tagged with package version and git commit for traceability.</li>
+<li><strong>DVC hashes</strong>: When available, <code>dvc_data_md5</code> and <code>dvc_model_md5</code> let you reproduce the exact data and model for any run.</li>
+<li><strong>MLflow vs W&amp;B</strong>: Use MLflow for fully local, offline workflows; use W&amp;B for cloud collaboration and dashboards.</li>
+</ul>
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://mlflow.org/docs/latest/index.html">MLflow documentation</a></li>
+<li><a href="https://docs.wandb.ai/">Weights &amp; Biases documentation</a></li>
+<li><a href="https://dvc.org/doc">DVC documentation</a></li>
+<li><a href="../model_serving/">Model Serving with Docker</a> – Serve the model via REST API from a container</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "navigation.instant", "navigation.path", "navigation.sections", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
