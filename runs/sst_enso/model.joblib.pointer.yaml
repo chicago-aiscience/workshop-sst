@@ -3,4 +3,4 @@ md5: 3f40eedd5d78fe0ec6d51e7547637fdd
 size: 872193
 source: https://github.com/chicago-aiscience/workshop-sst/releases/download/v0.6.2/model.joblib
 description: Trained RandomForest model predicting ENSO from SST lag features.
-git_commit: 33ab408d8479d4e8a9c4585a3bee362f1c45e88a
+git_commit: 03ac84d98ac058f284697aa258d387ec08fded56
