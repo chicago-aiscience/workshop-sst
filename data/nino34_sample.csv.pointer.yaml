@@ -1,0 +1,6 @@
+path: data/nino34_sample.csv
+md5: af5118ccfd637b0b90349921e7146663
+size: 2095
+source: https://raw.githubusercontent.com/chicago-aiscience/workshop-sst/pointer-files/data/nino34_sample.csv
+description: Monthly-mean Nino 3.4 index observations, ENSO indicator sample (2000-2023).
+git_commit: af5118ccfd637b0b90349921e7146663

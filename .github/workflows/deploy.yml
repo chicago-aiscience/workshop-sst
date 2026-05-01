@@ -174,6 +174,25 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+      - name: Extract metadata for serve image
+        id: meta-serve
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/workshop-sst-serve
+          tags: |
+            type=pep440,pattern={{version}},value=${{ needs.version.outputs.app_version }}
+            type=raw,value=latest
+
+      - name: Build and push serve image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.serve
+          push: true
+          pull: true
+          tags: ${{ steps.meta-serve.outputs.tags }}
+          labels: ${{ steps.meta-serve.outputs.labels }}
+
   release:
     runs-on: ubuntu-latest
     needs: [version, build-deploy]
@@ -204,7 +223,8 @@ jobs:
               # No rc suffix, bump patch and add rc1
               uv version --bump patch --bump rc
             fi
-          else
+
+            else
             version=$(uv version | awk '{print $2}')
             app_version=${version%%rc*}    # Remove release candidate suffix
             uv version $app_version

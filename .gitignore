@@ -35,6 +35,18 @@ htmlcov/
 # Project artifacts
 artifacts/
 
+# MLflow experiment tracking
+runs/**
+
+# Weights & Biases
+wandb/
+wandb_cache/
+!runs/**/
+!runs/**/*.dvc
+!runs/**/*.pointer.yaml
+mlruns/
+mlflow.db
+
 # OS files
 .DS_Store
 Thumbs.db
