@@ -43,6 +43,7 @@ wandb/
 wandb_cache/
 !runs/**/
 !runs/**/*.dvc
+!runs/**/*.pointer.yaml
 mlruns/
 mlflow.db
 

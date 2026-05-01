@@ -41,6 +41,7 @@ from mlflow.tracking import MlflowClient
 from sst.io import load_enso, load_sst
 from sst.ml import predict_enso_from_sst
 from sst.plot import make_ml_prediction_plot
+from sst.pointer import write_pointer_file
 from sst.transform import join_on_month, tidy
 
 
@@ -442,6 +443,15 @@ def main() -> None:
     # Train model
     results, model_path = train_model(cfg, data, work_dir)
     logging.info(f"Model saved here: {model_path}")
+
+    # Write human-readable pointer file for the model artifact
+    pointer_path = write_pointer_file(
+        asset_path=model_path,
+        source=f"https://github.com/chicago-aiscience/workshop-sst/releases/download/v{version}/{model_path.name}",
+        git_commit=git_info["commit"],
+        description="Trained RandomForest model predicting ENSO from SST lag features.",
+    )
+    logging.info(f"Pointer file written: {pointer_path}")
 
     # Log DVC content hashes for data/model traceability
     data_root = Path(os.environ.get("DATA_ROOT", "./data"))

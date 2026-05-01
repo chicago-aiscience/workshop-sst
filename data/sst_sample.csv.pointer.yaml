@@ -1,0 +1,6 @@
+path: data/sst_sample.csv
+md5: d08ae445bfa70901879bfe45ae78de40
+size: 2160
+source: https://github.com/chicago-aiscience/workshop-sst/releases/download/v0.6.2/sst_sample.csv
+description: Monthly-mean sea surface temperature observations, Pacific basin sample (2000-2023).
+git_commit: 8180177daeddf6b98045a0d6307e488891c93d96
